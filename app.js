@@ -8,6 +8,8 @@ var bodyParser            = require('body-parser');
 var params                = require('./json/params');
 var databaseInit          = require('./functions/database/init');
 
+var events                = require('./routes/events');
+
 var connector = mysql.createConnection(
 {
   host     : params.database.host,
@@ -23,6 +25,8 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/events', events);
 
 databaseInit.createDatabases(connector, (boolean, message) =>
 {
