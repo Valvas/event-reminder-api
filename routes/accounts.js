@@ -14,7 +14,7 @@ router.post('/create-account', (req, res) =>
 {
   accountsLogon.createAccount(req.body.account, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
-    boolean ? callback({ result: true }) : callback({ result: false });
+    boolean ? res.status(201).send({ result: true }) : res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` });
   });
 });
 
