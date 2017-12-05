@@ -10,7 +10,7 @@ var router = express.Router();
 
 /****************************************************************************************************/
 
-router.put('/create-account', (req, res) =>
+router.post('/create-account', (req, res) =>
 {
   accountsLogon.createAccount(req.body.account, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
