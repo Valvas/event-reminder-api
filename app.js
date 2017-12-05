@@ -9,6 +9,7 @@ var params                = require('./json/params');
 var databaseInit          = require('./functions/database/init');
 
 var events                = require('./routes/events');
+var accounts              = require('./routes/accounts');
 
 var connector = mysql.createConnection(
 {
@@ -27,6 +28,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/events', events);
+app.use('/accounts', accounts);
 
 databaseInit.createDatabases(connector, (boolean, message) =>
 {
