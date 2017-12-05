@@ -2,6 +2,14 @@
   "database":
   {
     "dbms": "MySQL",
+    "name": "event_reminder",
+    "tables":
+    {
+      "accounts": "accounts",
+      "events": "events",
+      "friends": "friends",
+      "participations": "participations"
+    },
     "host": "127.0.0.1",
     "user": "root",
     "password": "root"
