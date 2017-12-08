@@ -75,17 +75,33 @@ router.post('/add-participant-to-event', (req, res) =>
 
 /****************************************************************************************************/
 
-router.put('/get-my-participation-status', (req, res) =>
+router.put('/get-my-participation-status-for-one-event', (req, res) =>
 {
   req.body.email == undefined || req.body.event == undefined ? 
   
   res.status(406).send({ result: false, message: `Error [406] - ${errors[constants.MISSING_DATA_IN_QUERY]} !` }) :
 
-  participationsGet.getParticipationStatus(req.body.event, req.body.email, req.app.get('databaseConnector'), (statusOrFalse, errorStatus, errorCode) =>
+  participationsGet.getParticipationStatusForOneEvent(req.body.event, req.body.email, req.app.get('databaseConnector'), (statusOrFalse, errorStatus, errorCode) =>
   {
     typeof(statusOrFalse) == 'boolean' && statusOrFalse == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
     res.status(200).send({ result: true, participation: statusOrFalse });
+  });
+});
+
+/****************************************************************************************************/
+
+router.put('/get-my-participation-status-for-all-events', (req, res) =>
+{
+  req.body.email == undefined ?
+
+  res.status(406).send({ result: false, message: `Error [406] - ${errors[constants.MISSING_DATA_IN_QUERY]} !` }) :
+
+  participationsGet.getParticipationStatusForAllEvents(req.body.email, req.app.get('databaseConnector'), (statusOrFalse, errorStatus, errorCode) =>
+  {
+    statusOrFalse == false ?
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
+    res.status(200).send({ result: true, participations: statusOrFalse });
   });
 });
 

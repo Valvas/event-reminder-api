@@ -9,7 +9,7 @@ var databaseManager           = require(`${__root}/functions/database/${params.d
 
 /****************************************************************************************************/
 
-module.exports.getParticipationStatus = (eventID, accountEmail, databaseConnector, callback) =>
+module.exports.getParticipationStatusForOneEvent = (eventID, accountEmail, databaseConnector, callback) =>
 {
   accountsCheck.checkIfAccountExists(accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
   {
@@ -60,6 +60,63 @@ module.exports.getParticipationStatus = (eventID, accountEmail, databaseConnecto
           callback(participationOrErrorMessage[0].status);
         }
       });
+    });
+  });
+}
+
+/****************************************************************************************************/
+
+module.exports.getParticipationStatusForAllEvents = (accountEmail, databaseConnector, callback) =>
+{
+  accountsCheck.checkIfAccountExists(accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+  {
+    boolean == false ? callback(false, errorStatus, errorCode) :
+
+    databaseManager.selectQuery(
+    {
+      'databaseName': params.database.name,
+      'tableName': params.database.tables.participations,
+
+      'args':
+      {
+        '0': '*'
+      },
+
+      'where':
+      {
+        '=':
+        {
+          '0':
+          {
+            'key': 'account_email',
+            'value': accountEmail
+          }
+        }
+      }
+    }, databaseConnector, (boolean, statusOrErrorMessage) =>
+    {
+      if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+      else
+      {
+        if(statusOrErrorMessage.length == 0) callback({});
+
+        else
+        {
+          var x  = 0;
+          var obj = {};
+          
+          var statusLoop = () =>
+          {
+            obj[x] = {};
+            obj[x] = statusOrErrorMessage[x];
+
+            statusOrErrorMessage[x += 1] == undefined ? callback(obj) : statusLoop();
+          }
+
+          statusLoop();
+        }     
+      }
     });
   });
 }
