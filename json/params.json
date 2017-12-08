@@ -13,5 +13,76 @@
     "host": "127.0.0.1",
     "user": "root",
     "password": "root"
+  },
+
+  "format":
+  {
+    "event":
+    {
+      "name":
+      {
+        "min-length": 4,
+        "max-length": 64,
+        "required-digit": false,
+        "authorized-digit": true,
+        "required-spaces": false,
+        "authorized-spaces": true,
+        "required-lowercase": false,
+        "authorized-lowercase": true,
+        "required-uppercase": false,
+        "authorized-uppercase": true,
+        "required-special": false,
+        "authorized-special": true
+      },
+
+      "description":
+      {
+        "min-length": false,
+        "max-length": 1024,
+        "required-digit": false,
+        "authorized-digit": true,
+        "required-spaces": false,
+        "authorized-spaces": true,
+        "required-lowercase": false,
+        "authorized-lowercase": true,
+        "required-uppercase": false,
+        "authorized-uppercase": true,
+        "required-special": false,
+        "authorized-special": true
+      }
+    }
+  },
+
+  "rules":
+  {
+    "event":
+    {
+      "timeCycle":
+      {
+         "years":
+         {
+           "min": 0,
+           "max": 1
+         },
+
+         "months":
+         {
+           "min": 0,
+           "max": 11
+         },
+
+         "days":
+         {
+           "min": 0,
+           "max": 29
+         },
+
+         "hours":
+         {
+           "min": 0,
+           "max": 23
+         }
+      }
+    }
   }
 }

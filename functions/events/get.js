@@ -2,20 +2,105 @@
 
 var params            = require(`${__root}/json/params`);
 var constants         = require(`${__root}/functions/constants`);
+var accountsCheck     = require(`${__root}/functions/accounts/check`);
 var databaseManager   = require(`${__root}/functions/database/${params.database.dbms}`);
 
 /****************************************************************************************************/
 
 module.exports.getEvents = (accountEmail, databaseConnector, callback) =>
 {
+  accountsCheck.checkIfAccountExists(accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+  {
+    databaseManager.selectQuery(
+    {
+      'databaseName': params.database.name,
+      'tableName': params.database.tables.participations,
+    
+      'args':
+      {
+        '0': 'event_id'
+      },
+    
+      'where':
+      {
+        '=':
+        {
+          '0':
+          {
+            'key': 'account_email',
+            'value': accountEmail
+          }
+        }
+      }
+    }, databaseConnector, (boolean, rowsOrErrorMessage) =>
+    {
+      if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+      else
+      {
+        if(rowsOrErrorMessage.length == 0) callback({});
+
+        else
+        {
+          var x = 0, obj ={};
+
+          var eventLoop = () =>
+          {
+            databaseManager.selectQuery(
+            {
+              'databaseName': params.database.name,
+              'tableName': params.database.tables.events,
+          
+              'args':
+              {
+                '0': '*'
+              },
+          
+              'where':
+              {
+                '=':
+                {
+                  '0':
+                  {
+                    'key': 'id',
+                    'value': rowsOrErrorMessage[x].event_id
+                  }
+                }
+              }
+            }, databaseConnector, (boolean, eventOrErrorMessage) =>
+            {
+              if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+              else
+              {
+                obj[x] = {};
+                obj[x] = eventOrErrorMessage[0];
+
+                rowsOrErrorMessage[x += 1] == undefined ? callback(obj) : eventLoop();
+              }
+            });
+          }
+
+          eventLoop();
+        }
+      }
+    });
+  });
+}
+
+/****************************************************************************************************/
+
+module.exports.getParticipantsToEvent = (eventID, databaseConnector, callback) =>
+{
   databaseManager.selectQuery(
   {
     'databaseName': params.database.name,
-    'tableName': params.database.tables.accounts,
+    'tableName': params.database.tables.participations,
 
     'args':
     {
-      '0': 'id'
+      '0': 'account_email',
+      '1': 'status'
     },
 
     'where':
@@ -24,93 +109,64 @@ module.exports.getEvents = (accountEmail, databaseConnector, callback) =>
       {
         '0':
         {
-          'key': 'email',
-          'value': accountEmail
+          'key': 'event_id',
+          'value': eventID
         }
       }
     }
-  }, databaseConnector, (boolean, rowsOrErrorMessage) =>
+  }, databaseConnector, (boolean, participantsOrErrorMessage) =>
   {
     if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
 
     else
     {
-      rowsOrErrorMessage.length == 0 ? callback(false, 406, constants.ACCOUNT_NOT_FOUND) :
+      if(participantsOrErrorMessage.length == 0) callback({});
 
-      databaseManager.selectQuery(
+      else
       {
-        'databaseName': params.database.name,
-        'tableName': params.database.tables.participations,
-    
-        'args':
+        var x = 0, obj = {};
+
+        var accountLoop = () =>
         {
-          '0': 'event_id'
-        },
-    
-        'where':
-        {
-          '=':
+          databaseManager.selectQuery(
           {
-            '0':
+            'databaseName': params.database.name,
+            'tableName': params.database.tables.accounts,
+        
+            'args':
             {
-              'key': 'account_email',
-              'value': accountEmail
+              '0': '*'
+            },
+        
+            'where':
+            {
+              '=':
+              {
+                '0':
+                {
+                  'key': 'email',
+                  'value': participantsOrErrorMessage[x].account_email
+                }
+              }
             }
-          }
-        }
-      }, databaseConnector, (boolean, rowsOrErrorMessage) =>
-      {
-        if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
-
-        else
-        {
-          if(rowsOrErrorMessage.length == 0) callback({});
-
-          else
+          }, databaseConnector, (boolean, accountOrErrorMessage) =>
           {
-            var x = 0, obj ={};
+            if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
 
-            var eventLoop = () =>
+            else
             {
-              databaseManager.selectQuery(
-              {
-                'databaseName': params.database.name,
-                'tableName': params.database.tables.events,
-            
-                'args':
-                {
-                  '0': '*'
-                },
-            
-                'where':
-                {
-                  '=':
-                  {
-                    '0':
-                    {
-                      'key': 'id',
-                      'value': rowsOrErrorMessage[x].event_id
-                    }
-                  }
-                }
-              }, databaseConnector, (boolean, eventOrErrorMessage) =>
-              {
-                if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+              obj[x] = {};
+              obj[x] = accountOrErrorMessage[0];
+              obj[x].status = {};
+              obj[x].status = participantsOrErrorMessage[x].status
 
-                else
-                {
-                  obj[x] = {};
-                  obj[x] = eventOrErrorMessage[0];
-
-                  rowsOrErrorMessage[x += 1] == undefined ? callback(obj) : eventLoop();
-                }
-              });
+              participantsOrErrorMessage[x += 1] == undefined ? callback(obj) : accountLoop();
             }
-
-            eventLoop();
-          }
+          });
         }
-      });
+
+        accountLoop();
+      }
     }
   });
 }

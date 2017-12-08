@@ -13,9 +13,12 @@
     {
       "id": "INT UNSIGNED AUTO_INCREMENT PRIMARY KEY",
       "account_email": "VARCHAR(255) NOT NULL",
-      "date": "INT UNSIGNED NOT NULL",
+      "date": "BIGINT UNSIGNED NOT NULL",
       "is_ponctual": "BOOLEAN NOT NULL",
-      "time_cycle": "INT UNSIGNED NOT NULL",
+      "cycle_years": "INT UNSIGNED NOT NULL",
+      "cycle_months": "INT UNSIGNED NOT NULL",
+      "cycle_days": "INT UNSIGNED NOT NULL",
+      "cycle_hours": "INT UNSIGNED NOT NULL",
       "name": "VARCHAR(255) NOT NULL",
       "description": "TEXT(1024)"
     },

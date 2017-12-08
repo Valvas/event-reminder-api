@@ -1,4 +1,8 @@
 {
   "10001": "a database query failed",
-  "10002": "account not found"
+  "10002": "account not found",
+  "10003": "event not found",
+  "10004": "not a participant of current event",
+  "10005": "missing data in the request",
+  "10006": "incorrect format"
 }

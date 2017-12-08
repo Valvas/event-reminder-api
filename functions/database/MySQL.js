@@ -83,6 +83,8 @@ module.exports.updateQuery = function(query, SQLConnector, callback)
 
     else
     {
+      sql += array.join();
+
       if(Object.keys(query.where)[x] != undefined) sql += ' WHERE ';
       
       Object.keys(query.where)[x] != undefined ? second() :
