@@ -19,7 +19,7 @@ module.exports.createParticipation = (eventID, accountEmail, databaseConnector, 
     {
       boolean == false ? callback(false, errorStatus, errorCode) :
 
-      participationsCheck.checkIfParticipationExists(eventID, accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+      participationsCheck.checkIfParticipationDoNotAlreadyExists(eventID, accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
       {
         boolean == false ? callback(false, errorStatus, errorCode) :
     

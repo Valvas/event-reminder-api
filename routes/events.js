@@ -9,6 +9,7 @@ var eventsSet               = require(`${__root}/functions/events/set`);
 var eventsCreate            = require(`${__root}/functions/events/create`);
 var participationsGet       = require(`${__root}/functions/participations/get`);
 var participationsCreate    = require(`${__root}/functions/participations/create`);
+var participationsDelete    = require(`${__root}/functions/participations/delete`);
 var database                = require(`${__root}/functions/database/${params.database.dbms}`);
 
 var router = express.Router();
@@ -69,6 +70,22 @@ router.post('/add-participant-to-event', (req, res) =>
   {
     boolean ?
     res.status(201).send({ result: true }) :
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` });
+  });
+});
+
+/****************************************************************************************************/
+
+router.delete('/remove-participant-from-event', (req, res) =>
+{
+  req.body.email == undefined || req.body.event == undefined ? 
+
+  res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) :
+
+  participationsDelete.removeParticipantFromEvent(req.body.event, req.body.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  {
+    boolean ?
+    res.status(200).send({ result: true }) :
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` });
   });
 });
