@@ -30,9 +30,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/events', events);
 app.use('/accounts', accounts);
 
-databaseInit.createDatabases(connector, (boolean, message) =>
+databaseInit.createDatabases(connector, () =>
 {
-  console.log(message);
+
 });
 
 module.exports = app;
