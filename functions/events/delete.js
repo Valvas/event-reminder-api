@@ -14,17 +14,12 @@ module.exports.deleteEvent = (eventID, databaseConnector, callback) =>
   eventsCheck.checkIfEventExists(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
   {
     boolean == false ? callback(false, errorStatus, errorCode) :
-
-    databaseManager.selectQuery(
+    
+    databaseManager.deleteQuery(
     {
       'databaseName': params.database.name,
       'tableName': params.database.tables.events,
-
-      'args':
-      {
-        '0': 'id'
-      },
-
+  
       'where':
       {
         '=':
@@ -36,40 +31,9 @@ module.exports.deleteEvent = (eventID, databaseConnector, callback) =>
           }
         }
       }
-    }, databaseConnector, (boolean, rowOrErrorMessage) =>
+    }, databaseConnector, (boolean, deletedRowsOrErrorMessage) =>
     {
-      if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
-
-      else
-      {
-        rowOrErrorMessage.length > 0 ? callback(false, 406, constants.EVENT_NOT_FOUND) :
-
-        eventsCheck.checkIfEventExists(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
-        {
-          boolean == false ? callback(false, errorStatus, errorCode) :
-  
-          databaseManager.deleteQuery(
-          {
-            'databaseName': params.database.name,
-            'tableName': params.database.tables.events,
-  
-            'where':
-            {
-              '=':
-              {
-                '0':
-                {
-                  'key': 'id',
-                  'value': eventID
-                }
-              }
-            }
-          }, databaseConnector, (boolean, errorStatus, errorCode) =>
-          {
-            boolean ? callback(true) : callback(false, errorStatus, errorCode);
-          });
-        });
-      }
+      boolean ? callback(true) : callback(false, errorStatus, errorCode);
     });
   });
 }
