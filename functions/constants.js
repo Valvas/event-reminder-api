@@ -8,6 +8,7 @@ const MISSING_DATA_IN_QUERY                                                     
 const BAD_FORMAT                                                                              = 10006;
 const ALREADY_A_PARTICIPANT                                                                   = 10007;
 const EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS                                       = 10008;
+const ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL                                                = 10009;
 
 /****************************************************************************************************/
 
@@ -20,5 +21,6 @@ module.exports =
   MISSING_DATA_IN_QUERY: MISSING_DATA_IN_QUERY,
   BAD_FORMAT: BAD_FORMAT,
   ALREADY_A_PARTICIPANT: ALREADY_A_PARTICIPANT,
-  EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS: EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS
+  EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS: EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS,
+  ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL: ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL
 }
