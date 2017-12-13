@@ -39,3 +39,83 @@ module.exports.checkStrFormat = (str, rules, callback) =>
 }
 
 /****************************************************************************************************/
+
+module.exports.checkEventDataAndFormat = (obj, callback) =>
+{
+  if(obj == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+  
+  else
+  {
+    if(obj.name == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+
+    else
+    {
+      this.checkStrFormat(obj.name, params.format.event.name, (boolean) =>
+      {
+        if(boolean == false) callback(false, 406, constants.BAD_FORMAT);
+
+        else
+        {
+          if(obj.description == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+
+          else
+          {
+            this.checkStrFormat(obj.description, params.format.event.description, (boolean) =>
+            {
+              if(boolean == false) callback(false, 406, constants.BAD_FORMAT);
+
+              else
+              {
+                if(obj.accountEmail == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+
+                else
+                {
+                  if(obj.date == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+
+                  else if(typeof(obj.date) != 'number') callback(false, 406, constants.BAD_FORMAT);
+
+                  else
+                  {
+                    if(obj.date < Date.now() + 3600000) callback(false, 406, constants.BAD_FORMAT);
+
+                    else
+                    {
+                      if(obj.isPonctual == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+                      
+                      else if(typeof(obj.isPonctual) != 'boolean') callback(false, 406, constants.BAD_FORMAT);
+                      
+                      else
+                      {
+                        if(obj.timeCycle == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+
+                        else if(obj.timeCycle.years == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+                        else if(obj.timeCycle.months == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+                        else if(obj.timeCycle.days == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+                        else if(obj.timeCycle.hours == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+
+                        else if(obj.timeCycle.years < params.rules.event.timeCycle.years.min) callback(false, 406, constants.BAD_FORMAT);
+                        else if(obj.timeCycle.years > params.rules.event.timeCycle.years.max) callback(false, 406, constants.BAD_FORMAT);
+                        else if(obj.timeCycle.months < params.rules.event.timeCycle.months.min) callback(false, 406, constants.BAD_FORMAT);
+                        else if(obj.timeCycle.months > params.rules.event.timeCycle.months.max) callback(false, 406, constants.BAD_FORMAT);
+                        else if(obj.timeCycle.days < params.rules.event.timeCycle.days.min) callback(false, 406, constants.BAD_FORMAT);
+                        else if(obj.timeCycle.days > params.rules.event.timeCycle.days.max) callback(false, 406, constants.BAD_FORMAT);
+                        else if(obj.timeCycle.hours < params.rules.event.timeCycle.hours.min) callback(false, 406, constants.BAD_FORMAT);
+                        else if(obj.timeCycle.hours > params.rules.event.timeCycle.hours.max) callback(false, 406, constants.BAD_FORMAT);
+                        else
+                        { 
+                          callback(true); 
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            });
+          }
+        }
+      });
+    }
+  }
+}
+
+/****************************************************************************************************/

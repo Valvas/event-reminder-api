@@ -8,6 +8,7 @@ var bodyParser            = require('body-parser');
 var params                = require('./json/params');
 var databaseInit          = require('./functions/database/init');
 
+var participations        = require('./routes/participations');
 var events                = require('./routes/events');
 var accounts              = require('./routes/accounts');
 
@@ -27,6 +28,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/participations', participations);
 app.use('/events', events);
 app.use('/accounts', accounts);
 
