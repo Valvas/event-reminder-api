@@ -75,13 +75,13 @@ router.delete('/delete-event', (req, res) =>
   {
     boolean == false ?     
 
-    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus} 3] - ${errors[errorCode]} !` }) :
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
     
     eventsDelete.deleteEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
     {
       boolean ?
       res.status(200).send({ result: true }) :
-      res.status(errorStatus).send({ result: false, message: `Error [${errorStatus} 4] - ${errors[errorCode]} !` });
+      res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` });
     });
   });
 });
