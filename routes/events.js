@@ -7,6 +7,7 @@ var constants               = require(`${__root}/functions/constants`);
 var eventsGet               = require(`${__root}/functions/events/get`);
 var eventsSet               = require(`${__root}/functions/events/set`);
 var eventsCreate            = require(`${__root}/functions/events/create`);
+var eventsDelete            = require(`${__root}/functions/events/delete`);
 var participationsGet       = require(`${__root}/functions/participations/get`);
 var participationsCreate    = require(`${__root}/functions/participations/create`);
 var participationsDelete    = require(`${__root}/functions/participations/delete`);
@@ -64,6 +65,29 @@ router.post('/create-new-event', (req, res) =>
 
 /****************************************************************************************************/
 
+router.delete('/delete-event', (req, res) =>
+{
+  req.body.event == undefined ?
+
+  res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) : 
+
+  participationsDelete.removeParticipantsFromEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  {
+    boolean == false ?     
+
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus} 3] - ${errors[errorCode]} !` }) :
+    
+    eventsDelete.deleteEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+    {
+      boolean ?
+      res.status(200).send({ result: true }) :
+      res.status(errorStatus).send({ result: false, message: `Error [${errorStatus} 4] - ${errors[errorCode]} !` });
+    });
+  });
+});
+
+/****************************************************************************************************/
+
 router.post('/add-participant-to-event', (req, res) =>
 {
   participationsCreate.createParticipation(req.body.event, req.body.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
@@ -83,6 +107,22 @@ router.delete('/remove-participant-from-event', (req, res) =>
   res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) :
 
   participationsDelete.removeParticipantFromEvent(req.body.event, req.body.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  {
+    boolean ?
+    res.status(200).send({ result: true }) :
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` });
+  });
+});
+
+/****************************************************************************************************/
+
+router.delete('/remove-participants-from-event', (req, res) =>
+{
+  req.body.event == undefined ? 
+
+  res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) :
+
+  participationsDelete.removeParticipantsFromEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(200).send({ result: true }) :
