@@ -105,15 +105,10 @@ module.exports.removeParticipantsFromEvent = (eventID, databaseConnector, callba
   {
     boolean == false ? callback(false, errorStatus, errorCode) :
 
-    databaseManager.selectQuery(
+    databaseManager.deleteQuery(
     {
       'databaseName': params.database.name,
-      'tableName': params.database.tables.events,
-
-      'args':
-      {
-        '0': 'id'
-      },
+      'tableName': params.database.tables.participations,
 
       'where':
       {
@@ -121,40 +116,16 @@ module.exports.removeParticipantsFromEvent = (eventID, databaseConnector, callba
         {
           '0':
           {
-            'key': 'id',
+            'key': 'event_id',
             'value': eventID
           }
         }
       }
-    }, databaseConnector, (boolean, rowOrErrorMessage) =>
+    }, databaseConnector, (boolean, deletedRowsOrErrorMessage) =>
     {
-      if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
-
-      else
-      {
-        rowOrErrorMessage.length > 0 ? callback(false, 406, constants.EVENT_NOT_FOUND) :
-        
-        databaseManager.deleteQuery(
-        {
-          'databaseName': params.database.name,
-          'tableName': params.database.tables.participations,
-
-          'where':
-          {
-            '=':
-            {
-              '0':
-              {
-                'key': 'event_id',
-                'value': eventID
-              }
-            }
-          }
-        }, databaseConnector, (boolean, errorStatus, errorCode) =>
-        {
-          boolean ? callback(true) : callback(false, errorStatus, errorCode);
-        });
-      }
+      boolean ? callback(true) : callback(false, 500, constants.DATABASE_QUERY_ERROR);
     });
   });
 }
+
+/****************************************************************************************************/
