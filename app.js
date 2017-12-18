@@ -8,9 +8,10 @@ var bodyParser            = require('body-parser');
 var params                = require('./json/params');
 var databaseInit          = require('./functions/database/init');
 
-var participations        = require('./routes/participations');
 var events                = require('./routes/events');
+var friends               = require('./routes/friends');
 var accounts              = require('./routes/accounts');
+var participations        = require('./routes/participations');
 
 var connector = mysql.createConnection(
 {
@@ -28,9 +29,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/participations', participations);
 app.use('/events', events);
+app.use('/friends', friends);
 app.use('/accounts', accounts);
+app.use('/participations', participations);
 
 databaseInit.createDatabases(connector, () =>
 {

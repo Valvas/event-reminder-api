@@ -9,6 +9,9 @@ const BAD_FORMAT                                                                
 const ALREADY_A_PARTICIPANT                                                                   = 10007;
 const EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS                                       = 10008;
 const ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL                                                = 10009;
+const FRIEND_ALREADY_EXISTS                                                                   = 10010;
+const FRIENDSHIP_NOT_FOUND                                                                    = 10011;
+const FRIENDSHIP_NOT_IN_REJECTED_STATUS                                                       = 10012;
 
 /****************************************************************************************************/
 
@@ -22,5 +25,8 @@ module.exports =
   BAD_FORMAT: BAD_FORMAT,
   ALREADY_A_PARTICIPANT: ALREADY_A_PARTICIPANT,
   EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS: EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS,
-  ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL: ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL
+  ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL: ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL,
+  FRIEND_ALREADY_EXISTS: FRIEND_ALREADY_EXISTS,
+  FRIENDSHIP_NOT_FOUND: FRIENDSHIP_NOT_FOUND,
+  FRIENDSHIP_NOT_IN_REJECTED_STATUS: FRIENDSHIP_NOT_IN_REJECTED_STATUS
 }

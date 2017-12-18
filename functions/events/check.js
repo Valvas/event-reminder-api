@@ -51,8 +51,7 @@ module.exports.checkIfEmailIsEventCreatorEmail = (eventID, accountEmail, databas
   
     'args':
     {
-      '0': 'id',
-      '1': 'account_email'
+      '0': 'id'
     },
   
     'where':

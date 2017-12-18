@@ -7,5 +7,8 @@
   "10006": "incorrect format",
   "10007": "account already invited to participate to this event",
   "10008": "event creator cannot be removed from participants",
-  "10009": "Email is not equals to event creator email"
+  "10009": "email is not equals to event creator email",
+  "10010": "this friend already exists",
+  "10011": "this friendship does not exist",
+  "10012": "this friendship is not in rejected status"
 }

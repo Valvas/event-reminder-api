@@ -53,6 +53,13 @@
     }
   },
 
+  "friendship":
+  {
+    "WAITING": 0,
+    "REJECTED": 1,
+    "ACCEPTED": 2
+  },
+
   "rules":
   {
     "event":

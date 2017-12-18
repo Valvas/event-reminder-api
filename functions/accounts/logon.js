@@ -2,48 +2,28 @@
 
 var params            = require(`${__root}/json/params`);
 var constants         = require(`${__root}/functions/constants`);
+var accountsCheck     = require(`${__root}/functions/accounts/check`);
 var databaseManager   = require(`${__root}/functions/database/${params.database.dbms}`);
 
 /****************************************************************************************************/
 
 module.exports.createAccount = (obj, databaseConnector, callback) =>
 {
-  databaseManager.selectQuery(
+  accountsCheck.checkIfAccountExists(obj.email, databaseConnector, (boolean, errorStatus, errorCode) =>
   {
-    'databaseName': params.database.name,
-    'tableName': params.database.tables.accounts,
+    if(boolean == false && error.status == 500) callback(false, 500, constants.DATABASE_QUERY_ERROR);
 
-    'args':
-    {
-      '0': 'id'
-    },
-
-    'where':
-    {
-      '=':
-      {
-        '0':
-        {
-          'key': 'email',
-          'value': obj.email
-        }
-      }
-    }
-  }, databaseConnector, (boolean, accountOrErrorMessage) =>
-  {
-    if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+    else if(boolean == true) callback(true);
 
     else
     {
-      accountOrErrorMessage.length > 0 ? callback(true) :
-
       databaseManager.insertQuery(
       {
         'databaseName': params.database.name,
         'tableName': params.database.tables.accounts,
-
+  
         'uuid': false,
-
+  
         'args':
         {
           'email': obj.email,

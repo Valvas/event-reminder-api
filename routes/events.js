@@ -61,18 +61,11 @@ router.delete('/delete-event', (req, res) =>
 
   res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) : 
 
-  participationsDelete.removeParticipantsFromEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  eventsDelete.deleteEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
-    boolean == false ?     
-
-    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
-    
-    eventsDelete.deleteEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
-    {
-      boolean ?
-      res.status(200).send({ result: true }) :
-      res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` });
-    });
+    boolean ?
+    res.status(200).send({ result: true }) :
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` });
   });
 });
 

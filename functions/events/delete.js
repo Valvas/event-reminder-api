@@ -5,13 +5,14 @@ var constants                 = require(`${__root}/functions/constants`);
 var eventsCheck               = require(`${__root}/functions/events/check`);
 var accountsCheck             = require(`${__root}/functions/accounts/check`);
 var participationsCheck       = require(`${__root}/functions/participations/check`);
+var participationsDelete      = require(`${__root}/functions/participations/delete`);
 var databaseManager           = require(`${__root}/functions/database/${params.database.dbms}`);
 
 /****************************************************************************************************/
 
 module.exports.deleteEvent = (eventID, databaseConnector, callback) =>
 {
-  eventsCheck.checkIfEventExists(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
+  participationsDelete.removeParticipantsFromEvent(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
   {
     boolean == false ? callback(false, errorStatus, errorCode) :
     
