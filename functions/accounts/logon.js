@@ -9,9 +9,13 @@ var databaseManager   = require(`${__root}/functions/database/${params.database.
 
 module.exports.createAccount = (obj, databaseConnector, callback) =>
 {
+  obj.email == undefined || obj.firstname == undefined || obj.lastname == undefined ?
+  
+  callback(false, 404, constants.MISSING_DATA_IN_QUERY) :
+
   accountsCheck.checkIfAccountExists(obj.email, databaseConnector, (boolean, errorStatus, errorCode) =>
   {
-    if(boolean == false && error.status == 500) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+    if(boolean == false && errorStatus == 500) callback(false, 500, constants.DATABASE_QUERY_ERROR);
 
     else if(boolean == true) callback(true);
 

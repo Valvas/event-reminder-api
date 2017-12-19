@@ -72,15 +72,19 @@ module.exports.updateEvent = (obj, databaseConnector, callback) =>
   {
     boolean == false ? callback(false, errorStatus, errorCode) :
 
-    eventsCheck.checkIfEmailIsEventCreatorEmail(obj.id, obj.accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+    eventsCheck.checkIfEventExists(obj.id, databaseConnector, (boolean, errorStatus, errorCode) =>
     {
       boolean == false ? callback(false, errorStatus, errorCode) :
-      
-      databaseManager.updateQuery(
+
+      eventsCheck.checkIfEmailIsEventCreatorEmail(obj.id, obj.accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+      {
+        boolean == false ? callback(false, errorStatus, errorCode) :
+        
+        databaseManager.updateQuery(
         {
           'databaseName': params.database.name,
           'tableName': params.database.tables.events,
-  
+    
           'args':
           {
             'date': obj.date,
@@ -92,7 +96,7 @@ module.exports.updateEvent = (obj, databaseConnector, callback) =>
             'name': obj.name,
             'description': obj.description
           },
-  
+    
           'where':
           {
             '=':
@@ -106,9 +110,8 @@ module.exports.updateEvent = (obj, databaseConnector, callback) =>
           }
         }, databaseConnector, (boolean, updatedRowsOrErrorMessage) =>
         {
-          console.log(updatedRowsOrErrorMessage);
           if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
-  
+    
           else
           {
             updatedRowsOrErrorMessage == 0 ? 
@@ -116,6 +119,7 @@ module.exports.updateEvent = (obj, databaseConnector, callback) =>
             callback(true);
           }
         });
+      });
     });
   });
 }

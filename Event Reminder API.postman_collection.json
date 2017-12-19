@@ -1,0 +1,335 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Event Reminder API",
+		"_postman_id": "d8d664e4-7bd8-9246-5c19-73ad5ac64b61",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"description": "",
+			"item": [
+				{
+					"name": "Create account",
+					"request": {
+						"url": "localhost:3000/accounts/create-account",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"account\":\n\t{\n\t\t\"email\": \"john.doe@gmail.com\",\n\t\t\"lastname\": \"Doe\",\n\t\t\"firstname\": \"John\"\n\t}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Event",
+			"description": "",
+			"item": [
+				{
+					"name": "Get my events",
+					"request": {
+						"url": "localhost:3000/events/get-my-events",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"joseph.staline@gmail.com\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Create new event",
+					"request": {
+						"url": "localhost:3000/events/create-new-event",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"event\":\n\t{\n\t\t\"name\": \"Christmas\",\n\t\t\"description\": \"\",\n\t\t\"accountEmail\": \"joseph.staline@gmail.com\",\n\t\t\"date\": 1522724787000,\n\t\t\"isPonctual\": true,\n\t\t\"timeCycle\":\n\t\t{\n\t\t\t\"years\": 1,\n\t\t\t\"months\": 11,\n\t\t\t\"days\": 28,\n\t\t\t\"hours\": 23\n\t\t}\n\t}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update event",
+					"request": {
+						"url": "localhost:3000/events/update-event",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"event\":\n\t{\n\t\t\"id\": \"2\",\n\t\t\"name\": \"New Year\",\n\t\t\"description\": \"\",\n\t\t\"accountEmail\": \"joseph.staline@gmail.com\",\n\t\t\"date\": 1522724787000,\n\t\t\"isPonctual\": true,\n\t\t\"timeCycle\":\n\t\t{\n\t\t\t\"years\": 1,\n\t\t\t\"months\": 11,\n\t\t\t\"days\": 28,\n\t\t\t\"hours\": 23\n\t\t}\n\t}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete event",
+					"request": {
+						"url": "localhost:3000/events/delete-event",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"event\": 2\n}"
+						},
+						"description": "Suppression d'un évènement"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Friends",
+			"description": "",
+			"item": [
+				{
+					"name": "Add friend",
+					"request": {
+						"url": "localhost:3000/friends/add-friend",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ownerEmail\": \"joseph.staline@gmail.com\",\n\t\"friendEmail\": \"john.doe@gmail.com\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Delete friend",
+					"request": {
+						"url": "localhost:3000/friends/delete-friend",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ownerEmail\": \"joseph.staline@gmail.com\",\n\t\"friendEmail\": \"john.doe@gmail.com\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Update status",
+					"request": {
+						"url": "localhost:3000/friends/update-friend-status",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"ownerEmail\": \"joseph.staline@gmail.com\",\n\t\"friendEmail\": \"john.doe@gmail.com\",\n\t\"status\": 2\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Participation",
+			"description": "",
+			"item": [
+				{
+					"name": "Update participation status",
+					"request": {
+						"url": "localhost:3000/events/update-participation-status",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"update\":\n\t{\n\t\t\"accountEmail\": \"joseph.staline@gmail.com\",\n\t\t\"eventId\": 1,\n\t\t\"status\": 1\n\t}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Add participant to event",
+					"request": {
+						"url": "localhost:3000/events/add-participant-to-event",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"joseph.staline@gmail.com\",\n\t\"event\": 1\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Remove participant from event",
+					"request": {
+						"url": "localhost:3000/events/remove-participant-from-event",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"joseph.staline@gmail.com\",\n\t\"event\": 1\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Remove participants from event",
+					"request": {
+						"url": "localhost:3000/events/remove-participant-from-event",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"joseph.staline@gmail.com\",\n\t\"event\": 1\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get participants to event",
+					"request": {
+						"url": "localhost:3000/events/get-participants-to-event",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"event\": 1\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get my participation status for one event",
+					"request": {
+						"url": "localhost:3000/events//get-my-participation-status-for-one-event",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"joseph.staline@gmail.com\",\n\t\"event\": 1\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Get my participation status for all events",
+					"request": {
+						"url": "localhost:3000/events//get-my-participation-status-for-all-events",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\": \"joseph.staline@gmail.com\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

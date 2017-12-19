@@ -10,5 +10,7 @@
   "10009": "email is not equals to event creator email",
   "10010": "this friend already exists",
   "10011": "this friendship does not exist",
-  "10012": "this friendship is not in rejected status"
+  "10012": "this friendship is not in rejected status",
+  "10013": "this friendship has not been deleted",
+  "10014": "this friendship status is not authorized"
 }

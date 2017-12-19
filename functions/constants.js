@@ -12,6 +12,8 @@ const ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL                                  
 const FRIEND_ALREADY_EXISTS                                                                   = 10010;
 const FRIENDSHIP_NOT_FOUND                                                                    = 10011;
 const FRIENDSHIP_NOT_IN_REJECTED_STATUS                                                       = 10012;
+const FRIENDSHIP_NOT_DELETED                                                                  = 10013;
+const FRIENDSHIP_STATUS_NOT_AUTHORIZED                                                        = 10014;
 
 /****************************************************************************************************/
 
@@ -28,5 +30,7 @@ module.exports =
   ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL: ACCOUNT_EMAIL_IS_NOT_EVENT_CREATOR_EMAIL,
   FRIEND_ALREADY_EXISTS: FRIEND_ALREADY_EXISTS,
   FRIENDSHIP_NOT_FOUND: FRIENDSHIP_NOT_FOUND,
-  FRIENDSHIP_NOT_IN_REJECTED_STATUS: FRIENDSHIP_NOT_IN_REJECTED_STATUS
+  FRIENDSHIP_NOT_IN_REJECTED_STATUS: FRIENDSHIP_NOT_IN_REJECTED_STATUS,
+  FRIENDSHIP_NOT_DELETED: FRIENDSHIP_NOT_DELETED,
+  FRIENDSHIP_STATUS_NOT_AUTHORIZED: FRIENDSHIP_STATUS_NOT_AUTHORIZED
 }

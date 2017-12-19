@@ -16,8 +16,7 @@ module.exports.checkIfFriendDoesNotExist = (ownerEmail, friendEmail, databaseCon
 
     'args':
     {
-      '0': 'id',
-      '1': 'status'
+      '0': 'id'
     },
 
     'where':
