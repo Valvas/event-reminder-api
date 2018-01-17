@@ -12,23 +12,9 @@ module.exports.checkIfEventExists = (eventID, databaseConnector, callback) =>
   {
     'databaseName': params.database.name,
     'tableName': params.database.tables.events,
-  
-    'args':
-    {
-      '0': 'id'
-    },
-  
-    'where':
-    {
-      '=':
-      {
-        '0':
-        {
-          'key': 'id',
-          'value': eventID
-        }
-      }
-    }
+    'args': { '0': 'id' },  
+    'where': { '0': { 'operator': '=', '0': { 'key': 'id', 'value': eventID } } }
+
   }, databaseConnector, (boolean, eventOrErrorMessage) =>
   {
     if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
@@ -48,31 +34,9 @@ module.exports.checkIfEmailIsEventCreatorEmail = (eventID, accountEmail, databas
   {
     'databaseName': params.database.name,
     'tableName': params.database.tables.events,
-  
-    'args':
-    {
-      '0': 'id'
-    },
-  
-    'where':
-    {
-      'AND':
-      {
-        '=':
-        {
-          '0':
-          {
-            'key': 'id',
-            'value': eventID
-          },
-          '1':
-          {
-            'key': 'account_email',
-            'value': accountEmail
-          }
-        }
-      }
-    }
+    'args': { '0': 'id' },  
+    'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'id', 'value': eventID }, '1': { 'key': 'account_email', 'value': accountEmail } } } }
+
   }, databaseConnector, (boolean, eventOrErrorMessage) =>
   {
     if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);

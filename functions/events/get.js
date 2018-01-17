@@ -2,36 +2,24 @@
 
 var params            = require(`${__root}/json/params`);
 var constants         = require(`${__root}/functions/constants`);
-var accountsCheck     = require(`${__root}/functions/accounts/check`);
+var accountsGet       = require(`${__root}/functions/accounts/get`);
 var databaseManager   = require(`${__root}/functions/database/${params.database.dbms}`);
 
 /****************************************************************************************************/
 
 module.exports.getEvents = (accountEmail, databaseConnector, callback) =>
 {
-  accountsCheck.checkIfAccountExists(accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+  accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
   {
+    accountOrFalse == false ? callback(false, errorStatus, errorCode) :
+    
     databaseManager.selectQuery(
     {
       'databaseName': params.database.name,
-      'tableName': params.database.tables.participations,
+      'tableName': params.database.tables.participations,  
+      'args': { '0': 'event_id' },    
+      'where': { '0': { 'operator': '=', '0': { 'key': 'account_email', 'value': accountEmail } } }
     
-      'args':
-      {
-        '0': 'event_id'
-      },
-    
-      'where':
-      {
-        '=':
-        {
-          '0':
-          {
-            'key': 'account_email',
-            'value': accountEmail
-          }
-        }
-      }
     }, databaseConnector, (boolean, rowsOrErrorMessage) =>
     {
       if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
@@ -50,23 +38,9 @@ module.exports.getEvents = (accountEmail, databaseConnector, callback) =>
             {
               'databaseName': params.database.name,
               'tableName': params.database.tables.events,
-          
-              'args':
-              {
-                '0': '*'
-              },
-          
-              'where':
-              {
-                '=':
-                {
-                  '0':
-                  {
-                    'key': 'id',
-                    'value': rowsOrErrorMessage[x].event_id
-                  }
-                }
-              }
+              'args': { '0': '*' },          
+              'where': { '0': { 'operator': '=', '0': { 'key': 'id', 'value': rowsOrErrorMessage[x].event_id } } }
+ 
             }, databaseConnector, (boolean, eventOrErrorMessage) =>
             {
               if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
@@ -96,24 +70,9 @@ module.exports.getParticipantsToEvent = (eventID, databaseConnector, callback) =
   {
     'databaseName': params.database.name,
     'tableName': params.database.tables.participations,
+    'args': { '0': 'account_email', '1': 'status' },
+    'where': { '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventID } } }
 
-    'args':
-    {
-      '0': 'account_email',
-      '1': 'status'
-    },
-
-    'where':
-    {
-      '=':
-      {
-        '0':
-        {
-          'key': 'event_id',
-          'value': eventID
-        }
-      }
-    }
   }, databaseConnector, (boolean, participantsOrErrorMessage) =>
   {
     if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
@@ -131,24 +90,10 @@ module.exports.getParticipantsToEvent = (eventID, databaseConnector, callback) =
           databaseManager.selectQuery(
           {
             'databaseName': params.database.name,
-            'tableName': params.database.tables.accounts,
-        
-            'args':
-            {
-              '0': '*'
-            },
-        
-            'where':
-            {
-              '=':
-              {
-                '0':
-                {
-                  'key': 'email',
-                  'value': participantsOrErrorMessage[x].account_email
-                }
-              }
-            }
+            'tableName': params.database.tables.accounts,  
+            'args': { '0': '*' },        
+            'where': { '0': { 'operator': '=', '0': { 'key': 'email', 'value': participantsOrErrorMessage[x].account_email } } }
+      
           }, databaseConnector, (boolean, accountOrErrorMessage) =>
           {
             if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);

@@ -12,5 +12,7 @@
   "10011": "this friendship does not exist",
   "10012": "this friendship is not in rejected status",
   "10013": "this friendship has not been deleted",
-  "10014": "this friendship status is not authorized"
+  "10014": "this friendship status is not authorized",
+  "10015": "an authentication token is required",
+  "10016": "you cannot add yourself as a friend"
 }

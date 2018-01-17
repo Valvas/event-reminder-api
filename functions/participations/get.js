@@ -3,7 +3,7 @@
 var params                    = require(`${__root}/json/params`);
 var constants                 = require(`${__root}/functions/constants`);
 var eventsCheck               = require(`${__root}/functions/events/check`);
-var accountsCheck             = require(`${__root}/functions/accounts/check`);
+var accountsGet               = require(`${__root}/functions/accounts/get`);
 var participationsCheck       = require(`${__root}/functions/participations/check`);
 var databaseManager           = require(`${__root}/functions/database/${params.database.dbms}`);
 
@@ -11,9 +11,9 @@ var databaseManager           = require(`${__root}/functions/database/${params.d
 
 module.exports.getParticipationStatusForOneEvent = (eventID, accountEmail, databaseConnector, callback) =>
 {
-  accountsCheck.checkIfAccountExists(accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+  accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
   {
-    boolean == false ? callback(false, errorStatus, errorCode) :
+    accountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
     eventsCheck.checkIfEventExists(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
     {
@@ -23,32 +23,9 @@ module.exports.getParticipationStatusForOneEvent = (eventID, accountEmail, datab
       {
         'databaseName': params.database.name,
         'tableName': params.database.tables.participations,
-
-        'args':
-        {
-          '0': 'status'
-        },
-
-        'where':
-        {
-          'AND':
-          {
-            '=':
-            {
-              '0':
-              {
-                'key': 'event_id',
-                'value': eventID
-              },
-
-              '1':
-              {
-                'key': 'account_email',
-                'value': accountEmail
-              }
-            }
-          }
-        }
+        'args': { '0': 'status' },
+        'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventID }, '1': { 'key': 'account_email', 'value': accountEmail } } } }
+  
       }, databaseConnector, (boolean, participationOrErrorMessage) =>
       {
         if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
@@ -68,31 +45,17 @@ module.exports.getParticipationStatusForOneEvent = (eventID, accountEmail, datab
 
 module.exports.getParticipationStatusForAllEvents = (accountEmail, databaseConnector, callback) =>
 {
-  accountsCheck.checkIfAccountExists(accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+  accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
   {
-    boolean == false ? callback(false, errorStatus, errorCode) :
+    accountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
     databaseManager.selectQuery(
     {
       'databaseName': params.database.name,
       'tableName': params.database.tables.participations,
+      'args': { '0': '*' },
+      'where': { '0': { 'operator': '=', '0': { 'key': 'account_email', 'value': accountEmail } } }
 
-      'args':
-      {
-        '0': '*'
-      },
-
-      'where':
-      {
-        '=':
-        {
-          '0':
-          {
-            'key': 'account_email',
-            'value': accountEmail
-          }
-        }
-      }
     }, databaseConnector, (boolean, statusOrErrorMessage) =>
     {
       if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);

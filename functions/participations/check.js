@@ -12,32 +12,9 @@ module.exports.checkIfParticipationDoNotAlreadyExists = (eventID, accountEmail, 
   {
     'databaseName': params.database.name,
     'tableName': params.database.tables.participations,
+    'args': { '0': 'id' },  
+    'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventID }, '1': { 'key': 'account_email', 'value': accountEmail } } } }
   
-    'args':
-    {
-      '0': 'id'
-    },
-  
-    'where':
-    {
-      'AND':
-      {
-        '=':
-        {
-          '0':
-          {
-            'key': 'event_id',
-            'value': eventID
-          },
-
-          '1':
-          {
-            'key': 'account_email',
-            'value': accountEmail
-          }
-        }
-      }
-    }
   }, databaseConnector, (boolean, participationOrErrorMessage) =>
   {
     if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
@@ -56,33 +33,10 @@ module.exports.checkIfParticipationExists = (eventID, accountEmail, databaseConn
   databaseManager.selectQuery(
   {
     'databaseName': params.database.name,
-    'tableName': params.database.tables.participations,
-    
-    'args':
-    {
-      '0': 'id'
-    },
-    
-    'where':
-    {
-      'AND':
-      {
-        '=':
-        {
-          '0':
-          {
-            'key': 'event_id',
-            'value': eventID
-          },
-  
-          '1':
-          {
-            'key': 'account_email',
-            'value': accountEmail
-          }
-        }
-      }
-    }
+    'tableName': params.database.tables.participations,  
+    'args': { '0': 'id' },    
+    'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventID }, '1': { 'key': 'account_email', 'value': accountEmail } } } }
+
   }, databaseConnector, (boolean, participationOrErrorMessage) =>
   {
     if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);

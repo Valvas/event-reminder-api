@@ -3,32 +3,30 @@
 var params                    = require(`${__root}/json/params`);
 var format                    = require(`${__root}/functions/format`);
 var constants                 = require(`${__root}/functions/constants`);
-var accountsCheck             = require(`${__root}/functions/accounts/check`);
+var accountsGet               = require(`${__root}/functions/accounts/get`);
 var participationsCreate      = require(`${__root}/functions/participations/create`);
 var databaseManager           = require(`${__root}/functions/database/${params.database.dbms}`);
 
 /****************************************************************************************************/
 
-module.exports.createNewEvent = (obj, databaseConnector, callback) =>
+module.exports.createNewEvent = (obj, accountEmail, databaseConnector, callback) =>
 {
-  format.checkEventDataAndFormat(obj, (boolean, errorStatus, errorCode) =>
+  format.checkEventDataAndFormat(obj, accountEmail, (boolean, errorStatus, errorCode) =>
   {
     boolean == false ? callback(false, errorStatus, errorCode) :
 
-    accountsCheck.checkIfAccountExists(obj.accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+    accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
     {
-      boolean == false ? callback(false, errorStatus, errorCode) :
+      accountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
       databaseManager.insertQuery(
       {
         'databaseName': params.database.name,
         'tableName': params.database.tables.events,
-
         'uuid': false,
-
         'args':
         {
-          "account_email": obj.accountEmail,
+          "account_email": accountEmail,
           "date": obj.date,
           "is_ponctual": obj.isPonctual ? 1 : 0,
           "cycle_years": obj.timeCycle.years,
@@ -44,7 +42,7 @@ module.exports.createNewEvent = (obj, databaseConnector, callback) =>
 
         else
         {
-          participationsCreate.createParticipation(idOrErrorMessage, obj.accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+          participationsCreate.createParticipation(idOrErrorMessage, accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
           {
             boolean ? callback(true) : callback(false, errorStatus, errorCode);
           });

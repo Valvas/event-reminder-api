@@ -14,6 +14,8 @@ const FRIENDSHIP_NOT_FOUND                                                      
 const FRIENDSHIP_NOT_IN_REJECTED_STATUS                                                       = 10012;
 const FRIENDSHIP_NOT_DELETED                                                                  = 10013;
 const FRIENDSHIP_STATUS_NOT_AUTHORIZED                                                        = 10014;
+const AUTHENTICATION_TOKEN_REQUIRED                                                           = 10015;
+const CANNOT_ADD_YOURSELF_AS_FRIEND                                                           = 10016;
 
 /****************************************************************************************************/
 
@@ -32,5 +34,7 @@ module.exports =
   FRIENDSHIP_NOT_FOUND: FRIENDSHIP_NOT_FOUND,
   FRIENDSHIP_NOT_IN_REJECTED_STATUS: FRIENDSHIP_NOT_IN_REJECTED_STATUS,
   FRIENDSHIP_NOT_DELETED: FRIENDSHIP_NOT_DELETED,
-  FRIENDSHIP_STATUS_NOT_AUTHORIZED: FRIENDSHIP_STATUS_NOT_AUTHORIZED
+  FRIENDSHIP_STATUS_NOT_AUTHORIZED: FRIENDSHIP_STATUS_NOT_AUTHORIZED,
+  AUTHENTICATION_TOKEN_REQUIRED: AUTHENTICATION_TOKEN_REQUIRED,
+  CANNOT_ADD_YOURSELF_AS_FRIEND: CANNOT_ADD_YOURSELF_AS_FRIEND
 }

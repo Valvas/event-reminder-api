@@ -4,7 +4,7 @@ const UUIDModule = require('uuid');
 
 /****************************************************************************************************/
 
-module.exports.insertQuery = function(queryObject, SQLConnector, callback)
+module.exports.insertQuery = (queryObject, SQLConnector, callback) =>
 {
   var database = queryObject.databaseName;
   var table = queryObject.tableName;
@@ -33,15 +33,15 @@ module.exports.insertQuery = function(queryObject, SQLConnector, callback)
 
 /****************************************************************************************************/
 
-module.exports.selectQuery = function(query, SQLConnector, callback)
+module.exports.selectQuery = (query, SQLConnector, callback) =>
 {
   var sql = `SELECT ${Object.values(query.args).join()} FROM ${query.databaseName}.${query.tableName}`;
   
   var x = 0;
   
-  var loop = function()
+  var loop = () =>
   {
-    returnStatement(query['where'][Object.keys(query.where)[x]], [Object.keys(query.where)[x]], function(statement)
+    returnStatement(query['where'][Object.keys(query.where)[x]], [Object.keys(query.where)[x]], (statement) =>
     {
       sql += statement;
   
@@ -49,7 +49,7 @@ module.exports.selectQuery = function(query, SQLConnector, callback)
         
       Object.keys(query.where)[x] != undefined ? loop() :
       
-      SQLConnector.query(sql, function(err, result)
+      SQLConnector.query(sql, (err, result) =>
       {
         err ? callback(false, err.message) : callback(true, result);
       });
@@ -60,7 +60,7 @@ module.exports.selectQuery = function(query, SQLConnector, callback)
   
   Object.keys(query.where)[x] != undefined ? loop() :
 
-  SQLConnector.query(sql, function(err, result)
+  SQLConnector.query(sql, (err, result) =>
   {
     err ? callback(false, err.message) : callback(true, result);
   });
@@ -68,14 +68,14 @@ module.exports.selectQuery = function(query, SQLConnector, callback)
 
 /****************************************************************************************************/
 
-module.exports.updateQuery = function(query, SQLConnector, callback)
+module.exports.updateQuery = (query, SQLConnector, callback) =>
 {
   var sql = `UPDATE ${query.databaseName}.${query.tableName} SET `;
 
   var array = [];
   var x = 0, y = 0;
 
-  var first = function()
+  var first = () =>
   {
     array.push(`${Object.keys(query.args)[y]} = "${query['args'][Object.keys(query.args)[y]]}"`);
 
@@ -83,28 +83,28 @@ module.exports.updateQuery = function(query, SQLConnector, callback)
 
     else
     {
-      sql += array.join();
+      sql += array.join(',');
 
       if(Object.keys(query.where)[x] != undefined) sql += ' WHERE ';
       
       Object.keys(query.where)[x] != undefined ? second() :
-    
-      SQLConnector.query(sql, function(err, result)
+
+      SQLConnector.query(sql, (err, result) =>
       {
         err ? callback(false, err.message) : callback(true, result.affectedRows);
       });
     }
   }
 
-  var second = function()
+  var second = () =>
   {
-    returnStatement(query['where'][Object.keys(query.where)[x]], [Object.keys(query.where)[x]], function(statement)
+    returnStatement(query['where'][Object.keys(query.where)[x]], [Object.keys(query.where)[x]], (statement) =>
     {
       sql += statement;
         
       Object.keys(query.where)[x += 1] != undefined ? second() :
       
-      SQLConnector.query(sql, function(err, result)
+      SQLConnector.query(sql, (err, result) =>
       {
         err ? callback(false, err.message) : callback(true, result.affectedRows);
       });
@@ -116,15 +116,15 @@ module.exports.updateQuery = function(query, SQLConnector, callback)
 
 /****************************************************************************************************/
 
-module.exports.deleteQuery = function(query, SQLConnector, callback)
+module.exports.deleteQuery = (query, SQLConnector, callback) =>
 {
   var sql = `DELETE FROM ${query.databaseName}.${query.tableName}`;
   
   var x = 0;
   
-  var loop = function()
+  var loop = () =>
   {
-    returnStatement(query['where'][Object.keys(query.where)[x]], [Object.keys(query.where)[x]], function(statement)
+    returnStatement(query['where'][Object.keys(query.where)[x]], [Object.keys(query.where)[x]], (statement) =>
     {
       sql += statement;
   
@@ -132,7 +132,7 @@ module.exports.deleteQuery = function(query, SQLConnector, callback)
         
       Object.keys(query.where)[x] != undefined ? loop() :
       
-      SQLConnector.query(sql, function(err, result)
+      SQLConnector.query(sql, (err, result) =>
       {
         err ? callback(false, err.message) : callback(true, result.affectedRows);
       });
@@ -143,7 +143,7 @@ module.exports.deleteQuery = function(query, SQLConnector, callback)
   
   Object.keys(query.where)[x] != undefined ? loop() :
 
-  SQLConnector.query(sql, function(err, result)
+  SQLConnector.query(sql, (err, result) =>
   {
     err ? callback(false, err.message) : callback(true, result.affectedRows);
   });
@@ -154,60 +154,59 @@ module.exports.deleteQuery = function(query, SQLConnector, callback)
 function returnStatement(object, operands, callback)
 {
   var array = [];
-  var statement = '';
 
-  var x = 0;
-
-  var first = function()
+  if(object.operator != undefined && (object.operator == 'OR' || object.operator == 'AND'))
   {
-    if(Object.keys(object)[x] == 'AND' || Object.keys(object)[x] == 'OR' || Object.keys(object)[x] == 'LIKE' || Object.keys(object)[x] == '=' || Object.keys(object)[x] == '!=' || Object.keys(object)[x] == '<' || Object.keys(object)[x] == '>')
-    {
-      operands.push(Object.keys(object)[x]);
+    operands.push(object.operator);
 
-      returnStatement(object[Object.keys(object)[x]], operands, function(result)
+    var x = 0;
+
+    var firstLoop = () =>
+    {
+      returnStatement(object[x], operands, (result) =>
       {
         array.push(result);
 
-        x += 1;
-        
-        if(Object.keys(object)[x] == undefined)
-        {          
-          statement += `(${array.join(` ${operands.slice(-1)} `)})`;
+        if(object[x += 1] != undefined) firstLoop();
 
-          if(array.length > 1) operands.pop();
-          
-          callback(statement);
-        }
-        
         else
         {
-          first();
+          var result = '(' + array.join(` ${operands.slice(-1)} `) + ')';
+
+          operands.pop();
+
+          callback(result);
         }
       });
     }
 
-    else
-    {
-      second();
-
-      operands.pop();
-
-      statement += array.join(` ${operands.slice(-1)} `);
-      
-      Object.keys(object)[x] == undefined ? callback(statement) : first();
-    }
+    firstLoop();
   }
 
-  var second = function()
+  else
   {
-    array.push(`${object[Object.keys(object)[x]]['key']} ${operands.slice(-1)} "${object[Object.keys(object)[x]]['value']}"`);
+    operands.push(object.operator);
 
-    x += 1;
+    var x = 0;
 
-    if(Object.keys(object)[x] != undefined) second();
+    var secondLoop = () =>
+    {
+      array.push(` ${object[x].key} ${operands.slice(-1)} "${object[x].value}" `);
+
+      if(object[x += 1] != undefined) secondLoop();
+
+      else
+      {
+        operands.pop();
+        
+        var result = '(' + array.join(` ${operands.slice(-1)} `) + ')';
+
+        callback(result);
+      }
+    }
+
+    secondLoop();
   }
-
-  first();
 }
 
 /****************************************************************************************************/

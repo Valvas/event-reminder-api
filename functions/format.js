@@ -40,7 +40,7 @@ module.exports.checkStrFormat = (str, rules, callback) =>
 
 /****************************************************************************************************/
 
-module.exports.checkEventDataAndFormat = (obj, callback) =>
+module.exports.checkEventDataAndFormat = (obj, accountEmail, callback) =>
 {
   if(obj == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
   
@@ -66,7 +66,7 @@ module.exports.checkEventDataAndFormat = (obj, callback) =>
 
               else
               {
-                if(obj.accountEmail == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+                if(accountEmail == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
 
                 else
                 {

@@ -3,7 +3,7 @@
 var params                    = require(`${__root}/json/params`);
 var constants                 = require(`${__root}/functions/constants`);
 var eventsCheck               = require(`${__root}/functions/events/check`);
-var accountsCheck             = require(`${__root}/functions/accounts/check`);
+var accountsGet               = require(`${__root}/functions/accounts/get`);
 var participationsCheck       = require(`${__root}/functions/participations/check`);
 var databaseManager           = require(`${__root}/functions/database/${params.database.dbms}`);
 
@@ -11,9 +11,9 @@ var databaseManager           = require(`${__root}/functions/database/${params.d
 
 module.exports.removeParticipantFromEvent = (eventID, accountEmail, databaseConnector, callback) =>
 {
-  accountsCheck.checkIfAccountExists(accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+  accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
   {
-    boolean == false ? callback(false, errorStatus, errorCode) :
+    accountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
     eventsCheck.checkIfEventExists(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
     {
@@ -23,32 +23,9 @@ module.exports.removeParticipantFromEvent = (eventID, accountEmail, databaseConn
       {
         'databaseName': params.database.name,
         'tableName': params.database.tables.events,
+        'args': { '0': 'id' },
+        'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'id', 'value': eventID }, '1': { 'key': 'account_email', 'value': accountEmail } } } }
 
-        'args':
-        {
-          '0': 'id'
-        },
-
-        'where':
-        {
-          'AND':
-          {
-            '=':
-            {
-              '0':
-              {
-                'key': 'id',
-                'value': eventID
-              },
-
-              '1':
-              {
-                'key': 'account_email',
-                'value': accountEmail
-              }
-            }
-          }
-        }
       }, databaseConnector, (boolean, rowOrErrorMessage) =>
       {
         if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
@@ -65,27 +42,8 @@ module.exports.removeParticipantFromEvent = (eventID, accountEmail, databaseConn
             {
               'databaseName': params.database.name,
               'tableName': params.database.tables.participations,
-    
-              'where':
-              {
-                'AND':
-                {
-                  '=':
-                  {
-                    '0':
-                    {
-                      'key': 'event_id',
-                      'value': eventID
-                    },
-    
-                    '1':
-                    {
-                      'key': 'account_email',
-                      'value': accountEmail
-                    }
-                  }
-                }
-              }
+              'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'id', 'value': eventID }, '1': { 'key': 'account_email', 'value': accountEmail } } } }
+
             }, databaseConnector, (boolean, errorStatus, errorCode) =>
             {
               boolean ? callback(true) : callback(false, errorStatus, errorCode);
@@ -99,31 +57,26 @@ module.exports.removeParticipantFromEvent = (eventID, accountEmail, databaseConn
 
 /****************************************************************************************************/
 
-module.exports.removeParticipantsFromEvent = (eventID, databaseConnector, callback) =>
+module.exports.removeParticipantsFromEvent = (eventID, accountEmail, databaseConnector, callback) =>
 {
-  eventsCheck.checkIfEventExists(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
+  eventsCheck.checkIfEmailIsEventCreatorEmail(eventID, accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
   {
     boolean == false ? callback(false, errorStatus, errorCode) :
 
-    databaseManager.deleteQuery(
+    eventsCheck.checkIfEventExists(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
     {
-      'databaseName': params.database.name,
-      'tableName': params.database.tables.participations,
+      boolean == false ? callback(false, errorStatus, errorCode) :
 
-      'where':
+      databaseManager.deleteQuery(
       {
-        '=':
-        {
-          '0':
-          {
-            'key': 'event_id',
-            'value': eventID
-          }
-        }
-      }
-    }, databaseConnector, (boolean, deletedRowsOrErrorMessage) =>
-    {
-      boolean ? callback(true) : callback(false, 500, constants.DATABASE_QUERY_ERROR);
+        'databaseName': params.database.name,
+        'tableName': params.database.tables.participations,
+        'where': { '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventID } } }
+
+      }, databaseConnector, (boolean, deletedRowsOrErrorMessage) =>
+      {
+        boolean ? callback(true) : callback(false, 500, constants.DATABASE_QUERY_ERROR);
+      });
     });
   });
 }

@@ -3,6 +3,7 @@
 var express                 = require(`express`);
 var errors                  = require(`${__root}/json/errors`);
 var params                  = require(`${__root}/json/params`);
+var friendsGet              = require(`${__root}/functions/friends/get`);
 var friendsCreate           = require(`${__root}/functions/friends/create`);
 var friendsDelete           = require(`${__root}/functions/friends/delete`);
 var friendsUpdate           = require(`${__root}/functions/friends/update`);
@@ -12,9 +13,33 @@ var router = express.Router();
 
 /****************************************************************************************************/
 
+router.get('/get-my-friends', (req, res) =>
+{
+  friendsGet.getMyFriends(req.token.email, req.app.get('databaseConnector'), (friendsOrFalse, errorStatus, errorCode) =>
+  {
+    friendsOrFalse == false ?
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
+    res.status(200).send({ result: true, friends: friendsOrFalse });
+  });
+});
+
+/****************************************************************************************************/
+
+router.get('/get-my-invitation-list', (req, res) =>
+{
+  friendsGet.getMyInvitationList(req.token.email, req.app.get('databaseConnector'), (invitationsOrFalse, errorStatus, errorCode) =>
+  {
+    invitationsOrFalse == false ?
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
+    res.status(200).send({ result: true, invitations: invitationsOrFalse });
+  });
+});
+
+/****************************************************************************************************/
+
 router.post('/add-friend', (req, res) =>
 {
-  friendsCreate.createNewFriend(req.body.ownerEmail, req.body.friendEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  friendsCreate.createNewFriend(req.token.email, req.body.friendEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
@@ -26,7 +51,7 @@ router.post('/add-friend', (req, res) =>
 
 router.delete('/delete-friend', (req, res) =>
 {
-  friendsDelete.deleteFriend(req.body.ownerEmail, req.body.friendEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  friendsDelete.deleteFriend(req.token.email, req.body.friendEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
@@ -38,7 +63,7 @@ router.delete('/delete-friend', (req, res) =>
 
 router.put('/update-friend-status', (req, res) =>
 {
-  friendsUpdate.updateStatus(req.body.ownerEmail, req.body.friendEmail, req.body.status, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  friendsUpdate.updateStatus(req.token.email, req.body.friendEmail, req.body.status, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :

@@ -17,7 +17,7 @@ var router = express.Router();
 
 router.put('/update-participation-status', (req, res) =>
 {
-  eventsSet.setParticipationStatusToEvent(req.body.update, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  eventsSet.setParticipationStatusToEvent(req.body.update, req.token.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(200).send({ result: true }) :
@@ -29,7 +29,7 @@ router.put('/update-participation-status', (req, res) =>
 
 router.post('/add-participant-to-event', (req, res) =>
 {
-  participationsCreate.createParticipation(req.body.event, req.body.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  participationsCreate.createParticipation(req.body.event, req.body.participantEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(201).send({ result: true }) :
@@ -41,11 +41,11 @@ router.post('/add-participant-to-event', (req, res) =>
 
 router.delete('/remove-participant-from-event', (req, res) =>
 {
-  req.body.email == undefined || req.body.event == undefined ? 
+  req.token.email == undefined || req.body.event == undefined ? 
 
   res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) :
 
-  participationsDelete.removeParticipantFromEvent(req.body.event, req.body.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  participationsDelete.removeParticipantFromEvent(req.body.event, req.body.participantEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(200).send({ result: true }) :
@@ -61,7 +61,7 @@ router.delete('/remove-participants-from-event', (req, res) =>
 
   res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) :
 
-  participationsDelete.removeParticipantsFromEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  participationsDelete.removeParticipantsFromEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(200).send({ result: true }) :
@@ -85,11 +85,11 @@ router.put('/get-participants-to-event', (req, res) =>
 
 router.put('/get-my-participation-status-for-one-event', (req, res) =>
 {
-  req.body.email == undefined || req.body.event == undefined ? 
+  req.token.email == undefined || req.body.event == undefined ? 
   
   res.status(406).send({ result: false, message: `Error [406] - ${errors[constants.MISSING_DATA_IN_QUERY]} !` }) :
 
-  participationsGet.getParticipationStatusForOneEvent(req.body.event, req.body.email, req.app.get('databaseConnector'), (statusOrFalse, errorStatus, errorCode) =>
+  participationsGet.getParticipationStatusForOneEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), (statusOrFalse, errorStatus, errorCode) =>
   {
     typeof(statusOrFalse) == 'boolean' && statusOrFalse == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
@@ -99,13 +99,13 @@ router.put('/get-my-participation-status-for-one-event', (req, res) =>
 
 /****************************************************************************************************/
 
-router.put('/get-my-participation-status-for-all-events', (req, res) =>
+router.get('/get-my-participation-status-for-all-events', (req, res) =>
 {
-  req.body.email == undefined ?
+  req.token.email == undefined ?
 
   res.status(406).send({ result: false, message: `Error [406] - ${errors[constants.MISSING_DATA_IN_QUERY]} !` }) :
 
-  participationsGet.getParticipationStatusForAllEvents(req.body.email, req.app.get('databaseConnector'), (statusOrFalse, errorStatus, errorCode) =>
+  participationsGet.getParticipationStatusForAllEvents(req.token.email, req.app.get('databaseConnector'), (statusOrFalse, errorStatus, errorCode) =>
   {
     statusOrFalse == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :

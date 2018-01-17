@@ -15,9 +15,9 @@ var router = express.Router();
 
 /****************************************************************************************************/
 
-router.put('/get-my-events', (req, res) =>
+router.get('/get-my-events', (req, res) =>
 {
-  eventsGet.getEvents(req.body.email, req.app.get('databaseConnector'), (eventsObjectOrFalse, errorStatus, errorCode) =>
+  eventsGet.getEvents(req.token.email, req.app.get('databaseConnector'), (eventsObjectOrFalse, errorStatus, errorCode) =>
   {
     eventsObjectOrFalse == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
@@ -29,7 +29,7 @@ router.put('/get-my-events', (req, res) =>
 
 router.post('/create-new-event', (req, res) =>
 {
-  eventsCreate.createNewEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  eventsCreate.createNewEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(201).send({ result: true }) :
@@ -45,7 +45,7 @@ router.put('/update-event', (req, res) =>
 
   res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) : 
 
-  eventsSet.updateEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  eventsSet.updateEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(200).send({ result: true }) :
@@ -61,7 +61,7 @@ router.delete('/delete-event', (req, res) =>
 
   res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) : 
 
-  eventsDelete.deleteEvent(req.body.event, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  eventsDelete.deleteEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(200).send({ result: true }) :

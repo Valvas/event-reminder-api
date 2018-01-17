@@ -4,16 +4,16 @@ var params            = require(`${__root}/json/params`);
 var format            = require(`${__root}/functions/format`);
 var constants         = require(`${__root}/functions/constants`);
 var eventsCheck       = require(`${__root}/functions/events/check`);
-var accountsCheck     = require(`${__root}/functions/accounts/check`);
+var accountsGet       = require(`${__root}/functions/accounts/get`);
 var databaseManager   = require(`${__root}/functions/database/${params.database.dbms}`);
 
 /****************************************************************************************************/
 
-module.exports.setParticipationStatusToEvent = (obj, databaseConnector, callback) =>
+module.exports.setParticipationStatusToEvent = (obj, accountEmail, databaseConnector, callback) =>
 {
-  accountsCheck.checkIfAccountExists(obj.accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+  accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
   {
-    boolean == false ? callback(false, errorStatus, errorCode) :
+    accountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
     eventsCheck.checkIfEventExists(obj.eventId, databaseConnector, (boolean, errorStatus, errorCode) =>
     {
@@ -23,32 +23,9 @@ module.exports.setParticipationStatusToEvent = (obj, databaseConnector, callback
       {
         'databaseName': params.database.name,
         'tableName': params.database.tables.participations,
+        'args': { 'status': obj.status },
+        'where': { '0': { 'operator': 'AND', '0':{ 'operator': '=', '0': { 'key': 'account_email', 'value': accountEmail }, '1': { 'key': 'event_id', 'value': obj.eventId } } } }
 
-        'args':
-        {
-          'status': obj.status
-        },
-
-        'where':
-        {
-          'AND':
-          {
-            '=':
-            {
-              '0':
-              {
-                'key': 'account_email',
-                'value': obj.accountEmail
-              },
-
-              '1':
-              {
-                'key': 'event_id',
-                'value': obj.eventId
-              }
-            }
-          }
-        }
       }, databaseConnector, (boolean, updatedRowsOrErrorMessage) =>
       {
         if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
@@ -66,9 +43,9 @@ module.exports.setParticipationStatusToEvent = (obj, databaseConnector, callback
 
 /****************************************************************************************************/
 
-module.exports.updateEvent = (obj, databaseConnector, callback) =>
+module.exports.updateEvent = (obj, accountEmail, databaseConnector, callback) =>
 {
-  format.checkEventDataAndFormat(obj, (boolean, errorStatus, errorCode) =>
+  format.checkEventDataAndFormat(obj, accountEmail, (boolean, errorStatus, errorCode) =>
   {
     boolean == false ? callback(false, errorStatus, errorCode) :
 
@@ -76,7 +53,7 @@ module.exports.updateEvent = (obj, databaseConnector, callback) =>
     {
       boolean == false ? callback(false, errorStatus, errorCode) :
 
-      eventsCheck.checkIfEmailIsEventCreatorEmail(obj.id, obj.accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+      eventsCheck.checkIfEmailIsEventCreatorEmail(obj.id, accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
       {
         boolean == false ? callback(false, errorStatus, errorCode) :
         
@@ -84,7 +61,6 @@ module.exports.updateEvent = (obj, databaseConnector, callback) =>
         {
           'databaseName': params.database.name,
           'tableName': params.database.tables.events,
-    
           'args':
           {
             'date': obj.date,
@@ -95,19 +71,9 @@ module.exports.updateEvent = (obj, databaseConnector, callback) =>
             'cycle_hours': obj.timeCycle.hours,
             'name': obj.name,
             'description': obj.description
-          },
-    
-          'where':
-          {
-            '=':
-            {
-              '0':
-              {
-                'key': 'id',
-                'value': obj.id
-              }
-            }
-          }
+          },   
+          'where': { '0': { 'operator': '=', '0': { 'key': 'id', 'value': obj.id } } }
+ 
         }, databaseConnector, (boolean, updatedRowsOrErrorMessage) =>
         {
           if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
