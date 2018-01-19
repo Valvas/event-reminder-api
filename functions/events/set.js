@@ -11,33 +11,54 @@ var databaseManager   = require(`${__root}/functions/database/${params.database.
 
 module.exports.setParticipationStatusToEvent = (obj, accountEmail, databaseConnector, callback) =>
 {
+  obj                 == undefined ||
+  obj.eventId         == undefined ||
+  obj.status          == undefined ||
+  accountEmail        == undefined ||
+  databaseConnector   == undefined ?
+
+  callback(false, 406, constants.MISSING_DATA_IN_QUERY) :
+
   accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
   {
-    accountOrFalse == false ? callback(false, errorStatus, errorCode) :
+    if(accountOrFalse == false) callback(false, errorStatus, errorCode);
 
-    eventsCheck.checkIfEventExists(obj.eventId, databaseConnector, (boolean, errorStatus, errorCode) =>
+    else
     {
-      boolean == false ? callback(false, errorStatus, errorCode) :
-
-      databaseManager.updateQuery(
+      if(obj.status != params.participationStatus.WAITING && obj.status != params.participationStatus.ACCEPTED && obj.status != params.participationStatus.REJECTED)
       {
-        'databaseName': params.database.name,
-        'tableName': params.database.tables.participations,
-        'args': { 'status': obj.status },
-        'where': { '0': { 'operator': 'AND', '0':{ 'operator': '=', '0': { 'key': 'account_email', 'value': accountEmail }, '1': { 'key': 'event_id', 'value': obj.eventId } } } }
+        callback(false, 406, constants.PARTICIPATION_STATUS_NOT_AUTHORIZED);
+      }
 
-      }, databaseConnector, (boolean, updatedRowsOrErrorMessage) =>
+      else
       {
-        if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+        accountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
-        else
+        eventsCheck.checkIfEventExists(obj.eventId, databaseConnector, (boolean, errorStatus, errorCode) =>
         {
-          updatedRowsOrErrorMessage == 0 ? 
-          callback(false, 406, constants.NOT_A_PARTICIPANT_OF_CURRENT_EVENT) :
-          callback(true);
-        }
-      });
-    });
+          boolean == false ? callback(false, errorStatus, errorCode) :
+
+          databaseManager.updateQuery(
+          {
+            'databaseName': params.database.name,
+            'tableName': params.database.tables.participations,
+            'args': { 'status': obj.status },
+            'where': { '0': { 'operator': 'AND', '0':{ 'operator': '=', '0': { 'key': 'account_email', 'value': accountEmail }, '1': { 'key': 'event_id', 'value': obj.eventId } } } }
+
+          }, databaseConnector, (boolean, updatedRowsOrErrorMessage) =>
+          {
+            if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+            else
+            {
+              updatedRowsOrErrorMessage == 0 ? 
+              callback(false, 406, constants.NOT_A_PARTICIPANT_OF_CURRENT_EVENT) :
+              callback(true);
+            }
+          });
+        });
+      }
+    }
   });
 }
 

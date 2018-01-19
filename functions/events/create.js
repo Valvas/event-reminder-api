@@ -17,37 +17,46 @@ module.exports.createNewEvent = (obj, accountEmail, databaseConnector, callback)
 
     accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
     {
-      accountOrFalse == false ? callback(false, errorStatus, errorCode) :
+      if(accountOrFalse == false) callback(false, errorStatus, errorCode);
 
-      databaseManager.insertQuery(
+      else
       {
-        'databaseName': params.database.name,
-        'tableName': params.database.tables.events,
-        'uuid': false,
-        'args':
-        {
-          "account_email": accountEmail,
-          "date": obj.date,
-          "is_ponctual": obj.isPonctual ? 1 : 0,
-          "cycle_years": obj.timeCycle.years,
-          "cycle_months": obj.timeCycle.months,
-          "cycle_days": obj.timeCycle.days,
-          "cycle_hours": obj.timeCycle.hours,
-          "name": obj.name,
-          "description": obj.description
-        }
-      }, databaseConnector, (boolean, idOrErrorMessage) =>
-      {
-        if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+        var date = new Date(obj.date * 1000);
 
-        else
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+
+        databaseManager.insertQuery(
         {
-          participationsCreate.createParticipation(idOrErrorMessage, accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+          'databaseName': params.database.name,
+          'tableName': params.database.tables.events,
+          'uuid': false,
+          'args':
           {
-            boolean ? callback(true) : callback(false, errorStatus, errorCode);
-          });
-        }
-      });
+            "account_email": accountEmail,
+            "date": date.getTime(),
+            "is_ponctual": obj.isPonctual ? 1 : 0,
+            "cycle_years": obj.timeCycle.years,
+            "cycle_months": obj.timeCycle.months,
+            "cycle_days": obj.timeCycle.days,
+            "cycle_hours": obj.timeCycle.hours,
+            "cycle_minutes": obj.timeCycle.minutes,
+            "name": obj.name,
+            "description": obj.description
+          }
+        }, databaseConnector, (boolean, idOrErrorMessage) =>
+        {
+          if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+    
+          else
+          {
+            participationsCreate.createParticipation(idOrErrorMessage, accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+            {
+              boolean ? callback(true) : callback(false, errorStatus, errorCode);
+            });
+          }
+        });
+      }
     });
   });
 }

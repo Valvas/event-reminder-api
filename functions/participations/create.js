@@ -28,7 +28,7 @@ module.exports.createParticipation = (eventID, accountEmail, databaseConnector, 
           'databaseName': params.database.name,
           'tableName': params.database.tables.participations,   
           'uuid': false,        
-          'args': { 'event_id': eventID, 'account_email': accountEmail, 'status': 0 }
+          'args': { 'event_id': eventID, 'account_email': accountEmail, 'status': params.participationStatus.WAITING }
           
         }, databaseConnector, (boolean, idOrErrorMessage) =>
         {

@@ -155,7 +155,7 @@ function returnStatement(object, operands, callback)
 {
   var array = [];
 
-  if(object.operator != undefined && (object.operator == 'OR' || object.operator == 'AND'))
+  if(object.operator != undefined && (object.operator == 'OR' || object.operator == 'AND' || object.operator == '>' || object.operator == '<' || object.operator == '!='))
   {
     operands.push(object.operator);
 

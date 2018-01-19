@@ -26,7 +26,7 @@ router.get('/check-token-is-valid', (req, res) =>
   jwt.verify(req.get('Authorization'), req.app.get('tokenSecret'), (err, decoded) =>
   {
     err ? 
-    res.status(401).send({ result: false, message: `${err.charAt(0).toUpperCase()}${err.slice(1)}` }) :
+    res.status(401).send({ result: false, message: `${err.message.charAt(0).toUpperCase()}${err.message.slice(1)}` }) :
     res.status(200).send({ result: true });
   });
 });

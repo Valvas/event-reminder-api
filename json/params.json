@@ -60,35 +60,21 @@
     "ACCEPTED": 2
   },
 
+  "participationStatus":
+  {
+    "WAITING": 0,
+    "REJECTED": 1,
+    "ACCEPTED": 2
+  },
+
   "rules":
   {
     "event":
     {
       "timeCycle":
       {
-         "years":
-         {
-           "min": 0,
-           "max": 1
-         },
-
-         "months":
-         {
-           "min": 0,
-           "max": 11
-         },
-
-         "days":
-         {
-           "min": 0,
-           "max": 29
-         },
-
-         "hours":
-         {
-           "min": 0,
-           "max": 23
-         }
+         "min": 900000,
+         "max": 31536000000
       }
     }
   },

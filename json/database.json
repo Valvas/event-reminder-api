@@ -19,6 +19,7 @@
       "cycle_months": "INT UNSIGNED NOT NULL",
       "cycle_days": "INT UNSIGNED NOT NULL",
       "cycle_hours": "INT UNSIGNED NOT NULL",
+      "cycle_minutes": "INT UNSIGNED NOT NULL",
       "name": "VARCHAR(255) NOT NULL",
       "description": "TEXT(1024)"
     },

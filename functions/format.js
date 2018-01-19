@@ -4,16 +4,18 @@ var params            = require(`${__root}/json/params`);
 var constants         = require(`${__root}/functions/constants`);
 var databaseManager   = require(`${__root}/functions/database/${params.database.dbms}`);
 
+var format = module.exports = {};
+
 /****************************************************************************************************/
 
-module.exports.checkEmailFormat = (str, callback) =>
+format.checkEmailFormat = (str, callback) =>
 {
   callback(new RegExp("^[a-zA-Z][\\w\\.-]*[a-zA-Z0-9]@[a-zA-Z0-9][\\w\\.-]*[a-zA-Z0-9]\\.[a-zA-Z][a-zA-Z\\.]*[a-zA-Z]$").test(str));
 }
 
 /****************************************************************************************************/
 
-module.exports.checkStrFormat = (str, rules, callback) =>
+format.checkStrFormat = (str, rules, callback) =>
 {
   var check = true;
 
@@ -40,82 +42,54 @@ module.exports.checkStrFormat = (str, rules, callback) =>
 
 /****************************************************************************************************/
 
-module.exports.checkEventDataAndFormat = (obj, accountEmail, callback) =>
+format.checkEventDataAndFormat = (obj, accountEmail, callback) =>
 {
-  if(obj == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+  obj                     == undefined ||
+  obj.name                == undefined ||
+  obj.description         == undefined ||
+  accountEmail            == undefined ||
+  obj.date                == undefined ||
+  obj.isPonctual          == undefined ||
+  obj.timeCycle           == undefined ||
+  obj.timeCycle.years     == undefined ||
+  obj.timeCycle.months    == undefined ||
+  obj.timeCycle.days      == undefined ||
+  obj.timeCycle.hours     == undefined ||
+  obj.timeCycle.minutes   == undefined ?
   
-  else
+  callback(false, 406, constants.MISSING_DATA_IN_QUERY) :
+
+  format.checkStrFormat(obj.name, params.format.event.name, (boolean) =>
   {
-    if(obj.name == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+    boolean == false ? callback(false, 406, constants.BAD_FORMAT) :
 
-    else
+    format.checkStrFormat(obj.description, params.format.event.description, (boolean) =>
     {
-      this.checkStrFormat(obj.name, params.format.event.name, (boolean) =>
-      {
-        if(boolean == false) callback(false, 406, constants.BAD_FORMAT);
+      if(boolean == false) callback(false, 406, constants.BAD_FORMAT);
 
+      else
+      {
+        if(obj.date * 1000 < Date.now() + 900000){ callback(false, 406, constants.BAD_FORMAT); }
+
+        else if(typeof(obj.isPonctual) != 'boolean') callback(false, 406, constants.BAD_FORMAT);
+                      
         else
         {
-          if(obj.description == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
+          var time =  obj.timeCycle.years   * 31536000000 +
+                      obj.timeCycle.months  * 2592000000 +
+                      obj.timeCycle.days    * 86400000 +
+                      obj.timeCycle.hours   * 3600000 +
+                      obj.timeCycle.minutes * 60000;
+          
+          if(time < params.rules.event.timeCycle.min) callback(false, 406, constants.BAD_FORMAT);
 
-          else
-          {
-            this.checkStrFormat(obj.description, params.format.event.description, (boolean) =>
-            {
-              if(boolean == false) callback(false, 406, constants.BAD_FORMAT);
+          else if(time > params.rules.event.timeCycle.max) callback(false, 406, constants.BAD_FORMAT);
 
-              else
-              {
-                if(accountEmail == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
-
-                else
-                {
-                  if(obj.date == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
-
-                  else if(typeof(obj.date) != 'number') callback(false, 406, constants.BAD_FORMAT);
-
-                  else
-                  {
-                    if(obj.date < Date.now() + 3600000) callback(false, 406, constants.BAD_FORMAT);
-
-                    else
-                    {
-                      if(obj.isPonctual == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
-                      
-                      else if(typeof(obj.isPonctual) != 'boolean') callback(false, 406, constants.BAD_FORMAT);
-                      
-                      else
-                      {
-                        if(obj.timeCycle == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
-
-                        else if(obj.timeCycle.years == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
-                        else if(obj.timeCycle.months == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
-                        else if(obj.timeCycle.days == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
-                        else if(obj.timeCycle.hours == undefined) callback(false, 406, constants.MISSING_DATA_IN_QUERY);
-
-                        else if(obj.timeCycle.years < params.rules.event.timeCycle.years.min) callback(false, 406, constants.BAD_FORMAT);
-                        else if(obj.timeCycle.years > params.rules.event.timeCycle.years.max) callback(false, 406, constants.BAD_FORMAT);
-                        else if(obj.timeCycle.months < params.rules.event.timeCycle.months.min) callback(false, 406, constants.BAD_FORMAT);
-                        else if(obj.timeCycle.months > params.rules.event.timeCycle.months.max) callback(false, 406, constants.BAD_FORMAT);
-                        else if(obj.timeCycle.days < params.rules.event.timeCycle.days.min) callback(false, 406, constants.BAD_FORMAT);
-                        else if(obj.timeCycle.days > params.rules.event.timeCycle.days.max) callback(false, 406, constants.BAD_FORMAT);
-                        else if(obj.timeCycle.hours < params.rules.event.timeCycle.hours.min) callback(false, 406, constants.BAD_FORMAT);
-                        else if(obj.timeCycle.hours > params.rules.event.timeCycle.hours.max) callback(false, 406, constants.BAD_FORMAT);
-                        else
-                        { 
-                          callback(true); 
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            });
-          }
+          else{ callback(true); }
         }
-      });
-    }
-  }
+      }
+    });
+  });
 }
 
 /****************************************************************************************************/
