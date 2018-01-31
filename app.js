@@ -29,12 +29,16 @@ var sender = new gcm.Sender('AAAAmekFs6Y:APA91bECVn03td4aY4N0z406-BtnL5VGDiIjY8z
 
 /*var message = new gcm.Message(
 {
-    data: { key1: 'test message' }
+    notification: 
+    {
+      title: "Hello World! ",
+      body: "Here is a notification's body."
+    },
 });
  
 var regTokens = ['registrationToken'];
  
-sender.send(message, { registrationTokens: regTokens }, (err, response) =>
+sender.sendNoRetry(message, { registrationTokens: regTokens }, (err, response) =>
 {
     if(err) console.error(err);
     else console.log(response);
