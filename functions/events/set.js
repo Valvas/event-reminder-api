@@ -9,17 +9,17 @@ var databaseManager   = require(`${__root}/functions/database/${params.database.
 
 /****************************************************************************************************/
 
-module.exports.setParticipationStatusToEvent = (obj, accountEmail, databaseConnector, callback) =>
+module.exports.setParticipationStatusToEvent = (obj, databaseConnector, callback) =>
 {
   obj                 == undefined ||
   obj.eventId         == undefined ||
   obj.status          == undefined ||
-  accountEmail        == undefined ||
+  obj.accountEmail    == undefined ||
   databaseConnector   == undefined ?
 
   callback(false, 406, constants.MISSING_DATA_IN_QUERY) :
 
-  accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
+  accountsGet.getAccountUsingEmail(obj.accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
   {
     if(accountOrFalse == false) callback(false, errorStatus, errorCode);
 
@@ -43,7 +43,7 @@ module.exports.setParticipationStatusToEvent = (obj, accountEmail, databaseConne
             'databaseName': params.database.name,
             'tableName': params.database.tables.participations,
             'args': { 'status': obj.status },
-            'where': { '0': { 'operator': 'AND', '0':{ 'operator': '=', '0': { 'key': 'account_email', 'value': accountEmail }, '1': { 'key': 'event_id', 'value': obj.eventId } } } }
+            'where': { '0': { 'operator': 'AND', '0':{ 'operator': '=', '0': { 'key': 'account_email', 'value': obj.accountEmail }, '1': { 'key': 'event_id', 'value': obj.eventId } } } }
 
           }, databaseConnector, (boolean, updatedRowsOrErrorMessage) =>
           {

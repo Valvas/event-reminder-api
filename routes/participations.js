@@ -17,7 +17,7 @@ var router = express.Router();
 
 router.put('/update-participation-status', (req, res) =>
 {
-  eventsSet.setParticipationStatusToEvent(req.body.update, req.token.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  eventsSet.setParticipationStatusToEvent(req.body.update, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(200).send({ result: true }) :
