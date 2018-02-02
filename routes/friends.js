@@ -61,7 +61,7 @@ router.post('/delete-friend', (req, res) =>
 
 /****************************************************************************************************/
 
-router.put('/update-friend-status', (req, res) =>
+router.post('/update-friend-status', (req, res) =>
 {
   friendsUpdate.updateStatus(req.token.email, req.body.friendEmail, req.body.status, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
