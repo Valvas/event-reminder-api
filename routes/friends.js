@@ -49,7 +49,7 @@ router.post('/add-friend', (req, res) =>
 
 /****************************************************************************************************/
 
-router.delete('/delete-friend', (req, res) =>
+router.post('/delete-friend', (req, res) =>
 {
   friendsDelete.deleteFriend(req.token.email, req.body.friendEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {

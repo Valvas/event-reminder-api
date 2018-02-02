@@ -55,7 +55,7 @@ router.put('/update-event', (req, res) =>
 
 /****************************************************************************************************/
 
-router.delete('/delete-event', (req, res) =>
+router.post('/delete-event', (req, res) =>
 {
   req.body.event == undefined ?
 

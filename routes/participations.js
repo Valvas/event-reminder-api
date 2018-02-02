@@ -39,7 +39,7 @@ router.post('/add-participant-to-event', (req, res) =>
 
 /****************************************************************************************************/
 
-router.delete('/remove-participant-from-event', (req, res) =>
+router.post('/remove-participant-from-event', (req, res) =>
 {
   req.token.email == undefined || req.body.event == undefined ? 
 
@@ -55,7 +55,7 @@ router.delete('/remove-participant-from-event', (req, res) =>
 
 /****************************************************************************************************/
 
-router.delete('/remove-participants-from-event', (req, res) =>
+router.post('/remove-participants-from-event', (req, res) =>
 {
   req.body.event == undefined ? 
 
