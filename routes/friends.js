@@ -29,7 +29,7 @@ router.get('/get-my-invitation-list', (req, res) =>
 {
   friendsGet.getMyInvitationList(req.token.email, req.app.get('databaseConnector'), (invitationsOrFalse, errorStatus, errorCode) =>
   {
-    invitationsOrFalse == false ?
+    typeof(invitationsOrFalse) == 'boolean' && invitationsOrFalse == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
     res.status(200).send({ result: true, invitations: invitationsOrFalse });
   });
