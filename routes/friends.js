@@ -73,4 +73,28 @@ router.post('/update-friend-status', (req, res) =>
 
 /****************************************************************************************************/
 
+router.post('/accept-invitation', (req, res) =>
+{
+  friendsUpdate.updateStatus(req.body.friendEmail, req.token.email, params.friendship.ACCEPTED, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  {
+    boolean == false ?
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
+    res.status(200).send({ result: true });
+  });
+});
+
+/****************************************************************************************************/
+
+router.post('/reject-invitation', (req, res) =>
+{
+  friendsUpdate.updateStatus(req.body.friendEmail, req.token.email, params.friendship.REJECTED, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  {
+    boolean == false ?
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
+    res.status(200).send({ result: true });
+  });
+});
+
+/****************************************************************************************************/
+
 module.exports = router;
