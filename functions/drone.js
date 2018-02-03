@@ -1,8 +1,11 @@
 'use strict';
 
-var params            = require(`${__root}/json/params`);
-var constants         = require(`${__root}/functions/constants`);
-var databaseManager   = require(`${__root}/functions/database/${params.database.dbms}`);
+var params              = require(`${__root}/json/params`);
+var errors              = require(`${__root}/json/errors`);
+var constants           = require(`${__root}/functions/constants`);
+var eventsUpdate        = require(`${__root}/functions/events/update`);
+var notificationsSend   = require(`${__root}/functions/notifications/send`);
+var databaseManager     = require(`${__root}/functions/database/${params.database.dbms}`);
 
 /****************************************************************************************************/
 
@@ -41,14 +44,17 @@ module.exports.getStartingEventsInAnHour = (databaseConnector, sender) =>
 
             var participationsLoop = () =>
             {
-              console.log(`SENDING NOTIFICATION TO : "${participationsOrErrorMessage[y]['account_email']}" (EVENT IS STARTING IN AN HOUR) !`);
-            
-              if(participationsOrErrorMessage[y += 1] != undefined) participationsLoop();
-
-              else
+              notificationsSend.sendEventReminder(sender, eventsOrErrorMessage[x], participationsOrErrorMessage[y]['account_email'], databaseConnector, (boolean, errorStatus, errorMessage) =>
               {
-                if(eventsOrErrorMessage[x += 1] != undefined) eventsLoop();
-              }
+                if(boolean == false) console.log(`Error [${errorStatus}] - ${errorMessage} !`);
+
+                if(participationsOrErrorMessage[y += 1] != undefined) participationsLoop();
+
+                else
+                {
+                  if(eventsOrErrorMessage[x += 1] != undefined) eventsLoop();
+                }
+              });
             }
 
             if(Object.keys(participationsOrErrorMessage).length > 0) participationsLoop();
@@ -83,33 +89,41 @@ module.exports.getStartingEvents = (databaseConnector, sender) =>
 
       var eventsLoop = () =>
       {
-        databaseManager.selectQuery(
+        eventsUpdate.updateEventDateUsingCycle(eventsOrErrorMessage[x], databaseConnector, (boolean, errorStatus, errorMessage) =>
         {
-          'databaseName': params.database.name,
-          'tableName': params.database.tables.participations,
-          'args': { '0': '*' },
-          'where': { '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventsOrErrorMessage[x]['id'] } } }
-          
-        }, databaseConnector, (boolean, participationsOrErrorMessage) =>
-        {
-          if(boolean)
+          if(boolean == false) console.log(`Error [${errorStatus}] - ${errorMessage} !`);
+
+          databaseManager.selectQuery(
           {
-            var y = 0;
-
-            var participationsLoop = () =>
-            {
-              console.log(`SENDING NOTIFICATION TO : "${participationsOrErrorMessage[y]['account_email']}" (EVENT IS STARTING NOW) !`);
+            'databaseName': params.database.name,
+            'tableName': params.database.tables.participations,
+            'args': { '0': '*' },
+            'where': { '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventsOrErrorMessage[x]['id'] } } }
             
-              if(participationsOrErrorMessage[y += 1] != undefined) participationsLoop();
+          }, databaseConnector, (boolean, participationsOrErrorMessage) =>
+          {
+            if(boolean)
+            {
+              var y = 0;
 
-              else
+              var participationsLoop = () =>
               {
-                if(eventsOrErrorMessage[x += 1] != undefined) eventsLoop();
-              }
-            }
+                notificationsSend.sendEventIsStarting(sender, eventsOrErrorMessage[x], participationsOrErrorMessage[y]['account_email'], databaseConnector, (boolean, errorStatus, errorMessage) =>
+                {
+                  if(boolean == false) console.log(`Error [${errorStatus}] - ${errorMessage} !`);
 
-            if(Object.keys(participationsOrErrorMessage).length > 0) participationsLoop();
-          }
+                  if(participationsOrErrorMessage[y += 1] != undefined) participationsLoop();
+
+                  else
+                  {
+                    if(eventsOrErrorMessage[x += 1] != undefined) eventsLoop();
+                  }
+                });
+              }
+
+              if(Object.keys(participationsOrErrorMessage).length > 0) participationsLoop();
+            }
+          });
         });
       }
 

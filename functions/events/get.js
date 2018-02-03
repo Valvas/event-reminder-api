@@ -137,3 +137,25 @@ module.exports.getParticipantsToEvent = (eventID, databaseConnector, callback) =
 }
 
 /****************************************************************************************************/
+
+module.exports.getEventUsingID = (eventID, databaseConnector, callback) =>
+{
+  databaseManager.selectQuery(
+  {
+    'databaseName': params.database.name,
+    'tableName': params.database.tables.events,
+    'args': { '0': '*' },          
+    'where': { '0': { 'operator': '=', '0': { 'key': 'id', 'value': eventID } } }
+
+  }, databaseConnector, (boolean, eventOrErrorMessage) =>
+  {
+    if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+    else
+    {
+      eventOrErrorMessage.length == 0 ? callback(false, 404, constants.EVENT_NOT_FOUND) : callback(eventOrErrorMessage);
+    }
+  });
+}
+
+/****************************************************************************************************/

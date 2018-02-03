@@ -39,7 +39,7 @@ router.get('/get-my-invitation-list', (req, res) =>
 
 router.post('/add-friend', (req, res) =>
 {
-  friendsCreate.createNewFriend(req.token.email, req.body.friendEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  friendsCreate.createNewFriend(req.token.email, req.body.friendEmail, req.app.get('databaseConnector'), req.app.get('notificationSender'), (boolean, errorStatus, errorCode) =>
   {
     boolean == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
@@ -75,7 +75,7 @@ router.post('/update-friend-status', (req, res) =>
 
 router.post('/accept-invitation', (req, res) =>
 {
-  friendsUpdate.updateStatus(req.body.friendEmail, req.token.email, params.friendship.ACCEPTED, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  friendsUpdate.updateStatus(req.body.friendEmail, req.token.email, params.friendship.ACCEPTED, req.app.get('databaseConnector'), req.app.get('notificationSender'), (boolean, errorStatus, errorCode) =>
   {
     boolean == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
@@ -87,7 +87,7 @@ router.post('/accept-invitation', (req, res) =>
 
 router.post('/reject-invitation', (req, res) =>
 {
-  friendsUpdate.updateStatus(req.body.friendEmail, req.token.email, params.friendship.REJECTED, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  friendsUpdate.updateStatus(req.body.friendEmail, req.token.email, params.friendship.REJECTED, req.app.get('databaseConnector'), req.app.get('notificationSender'), (boolean, errorStatus, errorCode) =>
   {
     boolean == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :

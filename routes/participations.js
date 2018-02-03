@@ -29,7 +29,7 @@ router.put('/update-participation-status', (req, res) =>
 
 router.post('/add-participant-to-event', (req, res) =>
 {
-  participationsCreate.createParticipation(req.body.event, req.body.participantEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  participationsCreate.createParticipation(req.body.event, req.body.participantEmail, req.app.get('databaseConnector'), req.app.get('notificationSender'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(201).send({ result: true }) :

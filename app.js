@@ -27,23 +27,6 @@ var connector = mysql.createConnection(
  
 var sender = new gcm.Sender('AAAAmekFs6Y:APA91bECVn03td4aY4N0z406-BtnL5VGDiIjY8zsR1nAK8oHnrcQdwDqu7NkLnM7_J3WtGcK9uTxPLobvI7C5o-19tSVtD-p5zPPTcIHecYgspguATiLbgCHI7LJbMxPEOpiA9GnUfKM');
 
-/*var message = new gcm.Message(
-{
-    notification: 
-    {
-      title: "Hello World! ",
-      body: "Here is a notification's body."
-    },
-});
- 
-var regTokens = ['dVHS5IgZ-GA:APA91bG7HJCSUMAjySsl5v1hcsUDgPqNie2sA8xE_sFF1k5-sJJUMPbHR2C6xo2Lilah4e3zbKINvM7BRUPf4p9-vjoBkPVmNj3BbozNmJ2jtiUfY1h3sRLevps1A-4Qq3z9uE7YkFhK'];
- 
-sender.sendNoRetry(message, { registrationTokens: regTokens }, (err, response) =>
-{
-    if(err) console.error(err);
-    else console.log(response);
-});*/
-
 var app = express();
 
 app.set('tokenSecret', params.secret);

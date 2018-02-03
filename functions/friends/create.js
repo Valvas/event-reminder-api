@@ -4,19 +4,20 @@ var params                    = require(`${__root}/json/params`);
 var constants                 = require(`${__root}/functions/constants`);
 var accountsGet               = require(`${__root}/functions/accounts/get`);
 var friendsCheck              = require(`${__root}/functions/friends/check`);
+var notificationsSend         = require(`${__root}/functions/notifications/send`);
 var databaseManager           = require(`${__root}/functions/database/${params.database.dbms}`);
 
 /****************************************************************************************************/
 
-module.exports.createNewFriend = (ownerEmail, friendEmail, databaseConnector, callback) =>
+module.exports.createNewFriend = (ownerEmail, friendEmail, databaseConnector, sender, callback) =>
 {
-  accountsGet.getAccountUsingEmail(ownerEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
+  accountsGet.getAccountUsingEmail(ownerEmail, databaseConnector, (ownerAccountOrFalse, errorStatus, errorCode) =>
   {
-    accountOrFalse == false ? callback(false, errorStatus, errorCode) :
+    ownerAccountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
-    accountsGet.getAccountUsingEmail(friendEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
+    accountsGet.getAccountUsingEmail(friendEmail, databaseConnector, (friendAccountOrFalse, errorStatus, errorCode) =>
     {
-      if(accountOrFalse == false) callback(false, errorStatus, errorCode);
+      if(friendAccountOrFalse == false) callback(false, errorStatus, errorCode);
 
       else
       {
@@ -41,7 +42,17 @@ module.exports.createNewFriend = (ownerEmail, friendEmail, databaseConnector, ca
               
               }, databaseConnector, (boolean, updatedRowsOrErrorMessage) =>
               {
-                boolean ? callback(true) : callback(false, 500, constants.DATABASE_QUERY_ERROR);
+                if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+                else
+                {
+                  notificationsSend.informUserInvitedToBeFriend(sender, ownerAccountOrFalse, friendEmail, databaseConnector, (boolean, errorStatus, errorMessage) =>
+                  {
+                    if(boolean == false) console.log(`Error [${errorStatus}] - ${errorMessage} !`);
+
+                    callback(true);
+                  });
+                }
               });
             });
           }
@@ -57,7 +68,17 @@ module.exports.createNewFriend = (ownerEmail, friendEmail, databaseConnector, ca
               
             }, databaseConnector, (boolean, insertedIdOrErrorMessage) =>
             {
-              boolean ? callback(true) : callback(false, 500, constants.DATABASE_QUERY_ERROR);
+              if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+              else
+              {
+                notificationsSend.informUserInvitedToBeFriend(sender, ownerAccountOrFalse, friendEmail, databaseConnector, (boolean, errorStatus, errorMessage) =>
+                {
+                  if(boolean == false) console.log(`Error [${errorStatus}] - ${errorMessage} !`);
+                    
+                  callback(true);
+                });
+              }
             });
           }
         });
