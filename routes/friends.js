@@ -17,7 +17,7 @@ router.get('/get-my-friends', (req, res) =>
 {
   friendsGet.getMyFriends(req.token.email, req.app.get('databaseConnector'), (friendsOrFalse, errorStatus, errorCode) =>
   {
-    friendsOrFalse == false ?
+    typeof(friendsOrFalse) == 'boolean' && friendsOrFalse == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
     res.status(200).send({ result: true, friends: friendsOrFalse });
   });
