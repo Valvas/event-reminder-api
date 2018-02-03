@@ -144,7 +144,71 @@ module.exports.getMyInvitationList = (emailAddress, databaseConnector, callback)
 
       else
       {
-        friendshipsOrErrorMessage.length == 0 ? callback({}) : callback(friendshipsOrErrorMessage);
+        if(friendshipsOrErrorMessage.length == 0) callback([]);
+
+        else
+        {
+          var x = 0;
+          var data = [];
+
+          var loop = () =>
+          {
+            var friendship = {};
+
+            friendship['id'] = friendshipsOrErrorMessage[x].id;
+            friendship['status'] = friendshipsOrErrorMessage[x].status;
+
+            if(friendshipsOrErrorMessage[x].owner_email == emailAddress)
+            {
+              friendship['owner'] = accountOrFalse;
+
+              accountsGet.getAccountUsingEmail(friendshipsOrErrorMessage[x].friend_email, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
+              {
+                if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+                else
+                {
+                  if(accountOrFalse == false) callback(false, errorStatus, errorCode);
+
+                  else
+                  {
+                    friendship['friend'] = accountOrFalse;
+
+                    data.push(friendship);
+
+                    friendshipsOrErrorMessage[x += 1] == undefined ? callback(data) : loop();
+                  }
+                }
+              });
+            }
+
+            else if(friendshipsOrErrorMessage[x].friend_email == emailAddress)
+            {
+              friendship['friend'] = accountOrFalse;
+
+              accountsGet.getAccountUsingEmail(friendshipsOrErrorMessage[x].owner_email, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
+              {
+                if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+                else
+                {
+                  if(accountOrFalse == false) callback(false, errorStatus, errorCode);
+
+                  else
+                  {
+                    friendship['owner'] = accountOrFalse;
+
+                    data.push(friendship);
+
+                    friendshipsOrErrorMessage[x += 1] == undefined ? callback(data) : loop();
+                  }
+                }
+              });
+            }
+          }
+
+          loop();
+        }
       }
     });
   });
