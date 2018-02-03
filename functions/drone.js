@@ -89,7 +89,7 @@ module.exports.getStartingEvents = (databaseConnector, sender) =>
 
       var eventsLoop = () =>
       {
-        eventsUpdate.updateEventDateUsingCycle(eventsOrErrorMessage[x], databaseConnector, (boolean, errorStatus, errorMessage) =>
+        eventsUpdate.updateEventDateUsingCycle(eventsOrErrorMessage[x], databaseConnector, sender, (boolean, errorStatus, errorMessage) =>
         {
           if(boolean == false) console.log(`Error [${errorStatus}] - ${errorMessage} !`);
 
