@@ -21,7 +21,7 @@ module.exports.getMyFriends = (emailAddress, databaseConnector, callback) =>
     {
       'databaseName': params.database.name,
       'tableName': params.database.tables.friends,
-      'args': { '0': 'friend_email' },
+      'args': { '0': '*' },
       'where': { '0': { 'operator': 'OR', '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'owner_email', 'value': emailAddress }, '1': { 'key': 'status', 'value': params.friendship.ACCEPTED } } }, '1': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'friend_email', 'value': emailAddress }, '1': { 'key': 'status', 'value': params.friendship.ACCEPTED } } } } }
 
     }, databaseConnector, (boolean, friendsOrErrorMessage) =>

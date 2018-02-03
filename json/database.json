@@ -38,6 +38,13 @@
       "event_id": "INT UNSIGNED NOT NULL",
       "account_email": "VARCHAR(255) NOT NULL",
       "status": "INT UNSIGNED NOT NULL"
+    },
+
+    "notifications":
+    {
+      "id": "INT UNSIGNED AUTO_INCREMENT PRIMARY KEY",
+      "email": "VARCHAR(255) NOT NULL",
+      "token": "VARCHAR(255) NOT NULL"
     }
   }
 }
