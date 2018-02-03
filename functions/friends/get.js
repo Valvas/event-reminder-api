@@ -22,7 +22,7 @@ module.exports.getMyFriends = (emailAddress, databaseConnector, callback) =>
       'databaseName': params.database.name,
       'tableName': params.database.tables.friends,
       'args': { '0': 'friend_email' },
-      'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'owner_email', 'value': emailAddress }, '1': { 'key': 'status', 'value': params.friendship.ACCEPTED } } } }
+      'where': { '0': { 'operator': 'OR', '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'owner_email', 'value': emailAddress }, '1': { 'key': 'status', 'value': params.friendship.ACCEPTED } } }, '1': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'friend_email', 'value': emailAddress }, '1': { 'key': 'status', 'value': params.friendship.ACCEPTED } } } } }
 
     }, databaseConnector, (boolean, friendsOrErrorMessage) =>
     {
@@ -30,31 +30,37 @@ module.exports.getMyFriends = (emailAddress, databaseConnector, callback) =>
 
       else
       {
-        var obj = {};
-        var x = 0, y = 0;
+        var array = [];
+        var x = 0;
 
         var loop = () =>
         {
-          accountsGet.getAccountUsingEmail(friendsOrErrorMessage[x].friend_email, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
+          array.push(friendsOrErrorMessage[x]);
+
+          if(friendsOrErrorMessage[x].owner_email == emailAddress)
           {
-            if(accountOrFalse == false)
+            accountsGet.getAccountUsingEmail(friendsOrErrorMessage[x].friend_email, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
             {
-              friendsOrErrorMessage[x += 1] == undefined ? callback(obj) : loop();
-            }
+              array[x]['friendData'] = {};
+              array[x]['friendData'] = accountOrFalse;
 
-            else
+              friendsOrErrorMessage[x += 1] == undefined ? callback(array) : loop();
+            });
+          }
+
+          else
+          {
+            accountsGet.getAccountUsingEmail(friendsOrErrorMessage[x].owner_email, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
             {
-              obj[y] = {};
-              obj[y] = accountOrFalse;
+              array[x]['friendData'] = {};
+              array[x]['friendData'] = accountOrFalse;
 
-              y += 1;
-
-              friendsOrErrorMessage[x += 1] == undefined ? callback(obj) : loop();
-            }
-          });
+              friendsOrErrorMessage[x += 1] == undefined ? callback(array) : loop();
+            });
+          }
         }
 
-        friendsOrErrorMessage.length == 0 ? callback({}) : loop();
+        friendsOrErrorMessage.length == 0 ? callback(array) : loop();
       }
     });
   });

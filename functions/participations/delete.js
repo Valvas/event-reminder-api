@@ -9,47 +9,52 @@ var databaseManager           = require(`${__root}/functions/database/${params.d
 
 /****************************************************************************************************/
 
-module.exports.removeParticipantFromEvent = (eventID, accountEmail, databaseConnector, callback) =>
+module.exports.removeParticipantFromEvent = (eventID, accountEmail, participantEmail, databaseConnector, callback) =>
 {
   accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
   {
     accountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
-    eventsCheck.checkIfEventExists(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
+    accountsGet.getAccountUsingEmail(participantEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
     {
-      boolean == false ? callback(false, errorStatus, errorCode) :
+      accountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
-      databaseManager.selectQuery(
+      eventsCheck.checkIfEventExists(eventID, databaseConnector, (boolean, errorStatus, errorCode) =>
       {
-        'databaseName': params.database.name,
-        'tableName': params.database.tables.events,
-        'args': { '0': 'id' },
-        'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'id', 'value': eventID }, '1': { 'key': 'account_email', 'value': accountEmail } } } }
+        boolean == false ? callback(false, errorStatus, errorCode) :
 
-      }, databaseConnector, (boolean, rowOrErrorMessage) =>
-      {
-        if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
-
-        else
+        databaseManager.selectQuery(
         {
-          rowOrErrorMessage.length > 0 ? callback(false, 406, constants.EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS) :
+          'databaseName': params.database.name,
+          'tableName': params.database.tables.events,
+          'args': { '0': 'id' },
+          'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'id', 'value': eventID }, '1': { 'key': 'account_email', 'value': participantEmail } } } }
 
-          participationsCheck.checkIfParticipationExists(eventID, accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+        }, databaseConnector, (boolean, rowOrErrorMessage) =>
+        {
+          if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+          else
           {
-            boolean == false ? callback(false, errorStatus, errorCode) :
-    
-            databaseManager.deleteQuery(
-            {
-              'databaseName': params.database.name,
-              'tableName': params.database.tables.participations,
-              'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'id', 'value': eventID }, '1': { 'key': 'account_email', 'value': accountEmail } } } }
+            rowOrErrorMessage.length > 0 ? callback(false, 406, constants.EVENT_CREATOR_CANNOT_BE_REMOVED_FROM_PARTICIPANTS) :
 
-            }, databaseConnector, (boolean, errorStatus, errorCode) =>
+            participationsCheck.checkIfParticipationExists(eventID, participantEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
             {
-              boolean ? callback(true) : callback(false, errorStatus, errorCode);
+              boolean == false ? callback(false, errorStatus, errorCode) :
+      
+              databaseManager.deleteQuery(
+              {
+                'databaseName': params.database.name,
+                'tableName': params.database.tables.participations,
+                'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventID }, '1': { 'key': 'account_email', 'value': participantEmail } } } }
+
+              }, databaseConnector, (boolean, errorStatus, errorCode) =>
+              {
+                boolean ? callback(true) : callback(false, errorStatus, errorCode);
+              });
             });
-          });
-        }
+          }
+        });
       });
     });
   });

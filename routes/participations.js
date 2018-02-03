@@ -41,11 +41,11 @@ router.post('/add-participant-to-event', (req, res) =>
 
 router.post('/remove-participant-from-event', (req, res) =>
 {
-  req.token.email == undefined || req.body.event == undefined ? 
+  req.token.email == undefined || req.body.event == undefined || req.body.participantEmail == undefined ? 
 
   res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) :
 
-  participationsDelete.removeParticipantFromEvent(req.body.event, req.body.participantEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  participationsDelete.removeParticipantFromEvent(req.body.event, req.token.email, req.body.participantEmail, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(200).send({ result: true }) :
