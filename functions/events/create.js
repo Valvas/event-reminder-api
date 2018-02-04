@@ -9,7 +9,7 @@ var databaseManager           = require(`${__root}/functions/database/${params.d
 
 /****************************************************************************************************/
 
-module.exports.createNewEvent = (obj, accountEmail, databaseConnector, callback) =>
+module.exports.createNewEvent = (obj, accountEmail, databaseConnector, sender, callback) =>
 {
   format.checkEventDataAndFormat(obj, accountEmail, (boolean, errorStatus, errorCode) =>
   {
@@ -50,7 +50,7 @@ module.exports.createNewEvent = (obj, accountEmail, databaseConnector, callback)
     
           else
           {
-            participationsCreate.createParticipation(idOrErrorMessage, accountEmail, databaseConnector, (boolean, errorStatus, errorCode) =>
+            participationsCreate.createParticipation(idOrErrorMessage, accountEmail, databaseConnector, sender, (boolean, errorStatus, errorCode) =>
             {
               boolean ? callback(true) : callback(false, errorStatus, errorCode);
             });

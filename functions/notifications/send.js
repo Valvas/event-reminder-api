@@ -72,7 +72,14 @@ function sendNotifications(sender, title, messageContent, accountEmail, database
 {
   notificationsGet.getNotificationTokensForAccount(accountEmail, databaseConnector, (tokensOrFalse, errorStatus, errorCode) =>
   {
-    if(tokensOrFalse == false) callback(false, errorStatus, errorCode);
+    if(typeof(tokensOrFalse) == 'boolean' && tokensOrFalse == false) callback(false, errorStatus, errorCode);
+
+    else if(typeof(tokensOrFalse) == 'object' && tokensOrFalse.length == 0)
+    {
+      console.log(`[NOTIFICATION] - Sending notifications to ${tokensOrFalse.length} devices of "${accountEmail}" with content "${messageContent}"...`);
+
+      callback(true);
+    }
 
     else
     {

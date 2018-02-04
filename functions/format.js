@@ -43,7 +43,7 @@ format.checkStrFormat = (str, rules, callback) =>
 /****************************************************************************************************/
 
 format.checkEventDataAndFormat = (obj, accountEmail, callback) =>
-{console.log(`${obj}\n${accountEmail}`);
+{
   obj                     == undefined ||
   obj.name                == undefined ||
   obj.description         == undefined ||

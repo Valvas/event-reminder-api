@@ -153,7 +153,7 @@ module.exports.getEventUsingID = (eventID, databaseConnector, callback) =>
 
     else
     {
-      eventOrErrorMessage.length == 0 ? callback(false, 404, constants.EVENT_NOT_FOUND) : callback(eventOrErrorMessage);
+      eventOrErrorMessage.length == 0 ? callback(false, 404, constants.EVENT_NOT_FOUND) : callback(eventOrErrorMessage[0]);
     }
   });
 }

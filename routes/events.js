@@ -29,7 +29,7 @@ router.get('/get-my-events', (req, res) =>
 
 router.post('/create-new-event', (req, res) =>
 {
-  eventsCreate.createNewEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  eventsCreate.createNewEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), req.app.get('notificationSender'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(201).send({ result: true }) :
