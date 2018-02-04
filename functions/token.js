@@ -18,7 +18,7 @@ module.exports = (req, res, next) =>
 
   jwt.verify(req.get('Authorization'), req.app.get('tokenSecret'), (err, decoded) =>
   {
-    if(err) res.status(500).send({ result: false, message: `${err.charAt(0).toUpperCase()}${err.slice(1)}` });
+    if(err) res.status(500).send({ result: false, message: `${err.message.charAt(0).toUpperCase()}${err.message.slice(1)}` });
 
     else
     {
