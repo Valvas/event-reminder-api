@@ -81,9 +81,9 @@ format.checkEventDataAndFormat = (obj, accountEmail, callback) =>
                       obj.timeCycle.hours   * 3600000 +
                       obj.timeCycle.minutes * 60000;
           
-          if(time < params.rules.event.timeCycle.min) callback(false, 406, constants.BAD_FORMAT);
+          if(time < params.rules.event.timeCycle.min && obj.isPonctual == false) callback(false, 406, constants.BAD_FORMAT);
 
-          else if(time > params.rules.event.timeCycle.max) callback(false, 406, constants.BAD_FORMAT);
+          else if(time > params.rules.event.timeCycle.max && obj.isPonctual == false) callback(false, 406, constants.BAD_FORMAT);
 
           else{ callback(true); }
         }
