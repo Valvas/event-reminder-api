@@ -1,45 +1,40 @@
 {
+	"variables": [],
 	"info": {
 		"name": "Event Reminder API",
-		"_postman_id": "4e94767a-6ac5-f939-f364-0f712b679c6d",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"_postman_id": "f0315a06-479c-a8d2-7776-701dea8afd34",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
 	},
 	"item": [
 		{
 			"name": "Account",
+			"description": "",
 			"item": [
 				{
 					"name": "Create account",
 					"request": {
+						"url": "localhost:3000/public/accounts/create-account",
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"account\":\n  {\n    \"email\": \"john.doe@gmail.com\",\n    \"lastname\": \"Doe\",\n    \"firstname\": \"John\"\n  }\n}"
+							"raw": "{\n  \"account\":\n  {\n    \"email\": \"joseph.staline@gmail.com\",\n    \"lastname\": \"Doe\",\n    \"firstname\": \"John\"\n  }\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/public/accounts/create-account",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"public",
-								"accounts",
-								"create-account"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Check token is valid",
 					"request": {
+						"url": "localhost:3000/public/accounts/check-token-is-valid",
 						"method": "GET",
 						"header": [
 							{
@@ -51,18 +46,7 @@
 							"mode": "raw",
 							"raw": ""
 						},
-						"url": {
-							"raw": "localhost:3000/public/accounts/check-token-is-valid",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"public",
-								"accounts",
-								"check-token-is-valid"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				}
@@ -70,72 +54,59 @@
 		},
 		{
 			"name": "Event",
+			"description": "",
 			"item": [
 				{
 					"name": "Get my events",
 					"request": {
+						"url": "localhost:3000/events/get-my-events",
 						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"description": ""
 							},
 							{
 								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTUxNzM4NjY1MCwiZXhwIjoxNTE3NDczMDUwfQ.f1XTYL4oxjAu1tRChsuu5E1vJWJ8KR9PjqkjPoskboM"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Impvc2VwaC5zdGFsaW5lQGdtYWlsLmNvbSIsImlhdCI6MTUxNzc2MTQ2OCwiZXhwIjoxNTE3ODQ3ODY4fQ.kN0zhsB-Qml7poKkmLsQ4CGuqntJo5R8bd3ytEJax-c",
+								"description": ""
 							}
 						],
 						"body": {},
-						"url": {
-							"raw": "localhost:3000/events/get-my-events",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"events",
-								"get-my-events"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Create new event",
 					"request": {
+						"url": "localhost:3000/events/create-new-event",
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"description": ""
 							},
 							{
 								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTUxNzM4NjY1MCwiZXhwIjoxNTE3NDczMDUwfQ.f1XTYL4oxjAu1tRChsuu5E1vJWJ8KR9PjqkjPoskboM"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Impvc2VwaC5zdGFsaW5lQGdtYWlsLmNvbSIsImlhdCI6MTUxNzc2MTQ2OCwiZXhwIjoxNTE3ODQ3ODY4fQ.kN0zhsB-Qml7poKkmLsQ4CGuqntJo5R8bd3ytEJax-c",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"event\":\n  {\n    \"name\": \"Christmas\",\n    \"description\": \"\",\n    \"date\": 1692724787000,\n    \"isPonctual\": true,\n    \"timeCycle\":\n    {\n      \"years\": 0,\n      \"months\": 11,\n      \"days\": 28,\n      \"hours\": 23,\n      \"minutes\": 0\n    }\n  }\n}"
+							"raw": "{\n  \"event\":\n  {\n    \"name\": \"Christmas\",\n    \"description\": \"\",\n    \"date\": 1517774400,\n    \"isPonctual\": false,\n    \"timeCycle\":\n    {\n      \"years\": 0,\n      \"months\": 0,\n      \"days\": 0,\n      \"hours\": 1,\n      \"minutes\": 0\n    }\n  }\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/events/create-new-event",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"events",
-								"create-new-event"
-							]
-						},
-						"description": null
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Update event",
 					"request": {
+						"url": "localhost:3000/events/update-event",
 						"method": "PUT",
 						"header": [
 							{
@@ -151,50 +122,57 @@
 							"mode": "raw",
 							"raw": "{\n  \"event\":\n  {\n    \"id\": \"2\",\n    \"name\": \"New Year\",\n    \"description\": \"\",\n    \"date\": 1582724787000,\n    \"isPonctual\": true,\n    \"timeCycle\":\n    {\n      \"years\": 1,\n      \"months\": 11,\n      \"days\": 28,\n      \"hours\": 23\n    }\n  }\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/events/update-event",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"events",
-								"update-event"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Delete event",
 					"request": {
-						"method": "DELETE",
+						"url": "localhost:3000/events/delete-event",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"description": ""
 							},
 							{
 								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTUxNjEzMzU3MywiZXhwIjoxNTE2MjE5OTczfQ.H14BXZczw-FgYtnV8WBiEpmwAnGUwK7YwSqeRzBA-yE"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Impvc2VwaC5zdGFsaW5lQGdtYWlsLmNvbSIsImlhdCI6MTUxNzc2MTQ2OCwiZXhwIjoxNTE3ODQ3ODY4fQ.kN0zhsB-Qml7poKkmLsQ4CGuqntJo5R8bd3ytEJax-c",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"event\": 1\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/events/delete-event",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"events",
-								"delete-event"
-							]
-						},
 						"description": "Suppression d'un évènement"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel event",
+					"request": {
+						"url": "localhost:3000/events/cancel-event",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Impvc2VwaC5zdGFsaW5lQGdtYWlsLmNvbSIsImlhdCI6MTUxNzc2MTQ2OCwiZXhwIjoxNTE3ODQ3ODY4fQ.kN0zhsB-Qml7poKkmLsQ4CGuqntJo5R8bd3ytEJax-c",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"event\": \"2\"\n}"
+						},
+						"description": ""
 					},
 					"response": []
 				}
@@ -202,10 +180,12 @@
 		},
 		{
 			"name": "Friends",
+			"description": "",
 			"item": [
 				{
 					"name": "Add friend",
 					"request": {
+						"url": "localhost:3000/friends/add-friend",
 						"method": "POST",
 						"header": [
 							{
@@ -221,23 +201,14 @@
 							"mode": "raw",
 							"raw": "{\n  \"friendEmail\": \"joseph.staline@gmail.com\"\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/friends/add-friend",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"friends",
-								"add-friend"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Delete friend",
 					"request": {
+						"url": "localhost:3000/friends/delete-friend",
 						"method": "DELETE",
 						"header": [
 							{
@@ -253,23 +224,14 @@
 							"mode": "raw",
 							"raw": "{\n  \"friendEmail\": \"john.doe@gmail.com\"\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/friends/delete-friend",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"friends",
-								"delete-friend"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Update status",
 					"request": {
+						"url": "localhost:3000/friends/update-friend-status",
 						"method": "PUT",
 						"header": [
 							{
@@ -285,23 +247,14 @@
 							"mode": "raw",
 							"raw": "{\n  \"friendEmail\": \"joseph.staline@gmail.com\",\n  \"status\": 1\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/friends/update-friend-status",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"friends",
-								"update-friend-status"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get my friends",
 					"request": {
+						"url": "localhost:3000/friends/get-my-friends",
 						"method": "GET",
 						"header": [
 							{
@@ -317,49 +270,32 @@
 							"mode": "raw",
 							"raw": "{\n  \"email\": \"joseph.staline@gmail.com\"\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/friends/get-my-friends",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"friends",
-								"get-my-friends"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get my invitation list",
 					"request": {
+						"url": "localhost:3000/friends/get-my-invitation-list",
 						"method": "GET",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"description": ""
 							},
 							{
 								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTUxNjEzNDA3NCwiZXhwIjoxNTE2MjIwNDc0fQ.QKS1SK3sj1OT1kbEa2yxuBVBHNfxpCDGqk2vthaifiQ"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTUxNzY3NzE1NywiZXhwIjoxNTE3NzYzNTU3fQ.dbTTsvCyvU5ABlmRLAO6pjUNudFY8idsbKmF8QZtvFg",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n  \"email\": \"joseph.staline@gmail.com\"\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/friends/get-my-invitation-list",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"friends",
-								"get-my-invitation-list"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				}
@@ -367,10 +303,12 @@
 		},
 		{
 			"name": "Participation",
+			"description": "",
 			"item": [
 				{
 					"name": "Update participation status",
 					"request": {
+						"url": "localhost:3000/participations/update-participation-status",
 						"method": "PUT",
 						"header": [
 							{
@@ -386,87 +324,64 @@
 							"mode": "raw",
 							"raw": "{\n  \"update\":\n  {\n    \"eventId\": 3,\n    \"status\": 1\n  }\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/participations/update-participation-status",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"participations",
-								"update-participation-status"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Add participant to event",
 					"request": {
+						"url": "localhost:3000/participations/add-participant-to-event",
 						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"description": ""
 							},
 							{
 								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTUxNjEzMzc2MSwiZXhwIjoxNTE2MjIwMTYxfQ.5MeaQrbQ947gxtR7pTRIGVc1APt1cOSZEkhO_Vi5yW4"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTUxNzY3ODExMiwiZXhwIjoxNTE3NzY0NTEyfQ.pOg_ROl6QWNoDeYx_LOS7NIRiyMTt29pFG8CgLhuhW4",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"participantEmail\": \"john.doe@gmail.com\",\n  \"event\": 3\n}"
+							"raw": "{\n  \"participantEmail\": \"joseph.staline@gmail.com\",\n  \"event\": 1\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/participations/add-participant-to-event",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"participations",
-								"add-participant-to-event"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Remove participant from event",
 					"request": {
-						"method": "DELETE",
+						"url": "localhost:3000/participations/remove-participant-from-event",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
-								"value": "application/json"
+								"value": "application/json",
+								"description": ""
 							},
 							{
 								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTUxNjE5MzQ2MiwiZXhwIjoxNTE2Mjc5ODYyfQ.0MwoJCfNOgqhfeOddNX0Lyggi-OLL-EdcASKkXOg6fs"
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG4uZG9lQGdtYWlsLmNvbSIsImlhdCI6MTUxNzY3ODExMiwiZXhwIjoxNTE3NzY0NTEyfQ.pOg_ROl6QWNoDeYx_LOS7NIRiyMTt29pFG8CgLhuhW4",
+								"description": ""
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"participantEmail\": \"joseph.staline@gmail.com\",\n  \"event\": 3\n}"
+							"raw": "{\n  \"participantEmail\": \"joseph.staline@gmail.com\",\n  \"event\": 1\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/participations/remove-participant-from-event",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"participations",
-								"remove-participant-from-event"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Remove participants from event",
 					"request": {
+						"url": "localhost:3000/participations/remove-participants-from-event",
 						"method": "DELETE",
 						"header": [
 							{
@@ -482,23 +397,14 @@
 							"mode": "raw",
 							"raw": "{\n  \"event\": 3\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/participations/remove-participants-from-event",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"participations",
-								"remove-participants-from-event"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get participants to event",
 					"request": {
+						"url": "localhost:3000/participations/get-participants-to-event",
 						"method": "PUT",
 						"header": [
 							{
@@ -514,23 +420,14 @@
 							"mode": "raw",
 							"raw": "{\n  \"event\": 7\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/participations/get-participants-to-event",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"participations",
-								"get-participants-to-event"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get my participation status for one event",
 					"request": {
+						"url": "localhost:3000/participations/get-my-participation-status-for-one-event",
 						"method": "PUT",
 						"header": [
 							{
@@ -546,23 +443,14 @@
 							"mode": "raw",
 							"raw": "{\n  \"event\": 3\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/participations/get-my-participation-status-for-one-event",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"participations",
-								"get-my-participation-status-for-one-event"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				},
 				{
 					"name": "Get my participation status for all events",
 					"request": {
+						"url": "localhost:3000/participations/get-my-participation-status-for-all-events",
 						"method": "GET",
 						"header": [
 							{
@@ -578,17 +466,7 @@
 							"mode": "raw",
 							"raw": "{\n  \"email\": \"joseph.staline@gmail.com\"\n}"
 						},
-						"url": {
-							"raw": "localhost:3000/participations/get-my-participation-status-for-all-events",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"participations",
-								"get-my-participation-status-for-all-events"
-							]
-						}
+						"description": ""
 					},
 					"response": []
 				}
