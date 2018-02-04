@@ -89,8 +89,6 @@ function sendNotifications(sender, title, messageContent, accountEmail, database
 
       sender.send(message, { registrationTokens: tokensOrFalse }, (err, response) =>
       {
-        console.log(response);
-        console.log(tokensOrFalse);
         err ? callback(false, 500, err.message) : callback(true);
       });
     }
