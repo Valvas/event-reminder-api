@@ -60,18 +60,18 @@ format.checkEventDataAndFormat = (obj, accountEmail, callback) =>
   callback(false, 406, constants.MISSING_DATA_IN_QUERY) :
 
   format.checkStrFormat(obj.name, params.format.event.name, (boolean) =>
-  {
+  {console.log(boolean);
     boolean == false ? callback(false, 406, constants.BAD_FORMAT) :
 
     format.checkStrFormat(obj.description, params.format.event.description, (boolean) =>
-    {
+    {console.log(boolean);
       if(boolean == false) callback(false, 406, constants.BAD_FORMAT);
 
       else
       {
-        if(obj.date * 1000 < Date.now() + 900000){ callback(false, 406, constants.BAD_FORMAT); }
+        if(obj.date * 1000 < Date.now() + 900000){ console.log(false);callback(false, 406, constants.BAD_FORMAT); }
 
-        else if(typeof(obj.isPonctual) != 'boolean') callback(false, 406, constants.BAD_FORMAT);
+        else if(typeof(obj.isPonctual) != 'boolean'){ console.log(false);callback(false, 406, constants.BAD_FORMAT); }
                       
         else
         {
@@ -81,9 +81,9 @@ format.checkEventDataAndFormat = (obj, accountEmail, callback) =>
                       obj.timeCycle.hours   * 3600000 +
                       obj.timeCycle.minutes * 60000;
           
-          if(time < params.rules.event.timeCycle.min) callback(false, 406, constants.BAD_FORMAT);
+          if(time < params.rules.event.timeCycle.min){ console.log(false);callback(false, 406, constants.BAD_FORMAT); }
 
-          else if(time > params.rules.event.timeCycle.max) callback(false, 406, constants.BAD_FORMAT);
+          else if(time > params.rules.event.timeCycle.max){ console.log(false);callback(false, 406, constants.BAD_FORMAT); }
 
           else{ callback(true); }
         }
