@@ -57,7 +57,7 @@ format.checkEventDataAndFormat = (obj, accountEmail, callback) =>
   obj.timeCycle.hours     == undefined ||
   obj.timeCycle.minutes   == undefined ?
   
-  callback(false, 406, constants.MISSING_DATA_IN_QUERY) :
+  callback(false, 404, constants.MISSING_DATA_IN_QUERY) :
 
   format.checkStrFormat(obj.name, params.format.event.name, (boolean) =>
   {console.log(boolean);
