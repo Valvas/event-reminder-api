@@ -86,7 +86,19 @@ module.exports.cancelEvent = (eventID, accountEmail, databaseConnector, sender, 
 
           eventsUpdate.updateEventDateUsingCycle(eventOrFalse, databaseConnector, sender, (boolean, errorStatus, errorMessage) =>
           {
-            boolean == false ? callback(false, errorStatus, constants.COULD_NOT_UPDATE_EVENT_DATE) : callback(true);
+            boolean == false ? callback(false, errorStatus, constants.COULD_NOT_UPDATE_EVENT_DATE) :
+            
+            databaseManager.updateQuery(
+            {
+              'databaseName': params.database.name,
+              'tableName': params.database.tables.participations,
+              'args': { 'status': params.participationStatus.WAITING },
+              'where': { '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventID } } } 
+
+            }, databaseConnector, (boolean, updatedRowsOrErrorMessage) =>
+            {
+              boolean == false ? callback(false, 500, constants.DATABASE_QUERY_ERROR) : callback(true);
+            });
           });
         });
       }
