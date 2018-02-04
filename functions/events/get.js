@@ -99,11 +99,11 @@ module.exports.getParticipantsToEvent = (eventID, databaseConnector, callback) =
 
     else
     {
-      if(participantsOrErrorMessage.length == 0) callback({});
+      if(participantsOrErrorMessage.length == 0) callback([]);
 
       else
       {
-        var x = 0, obj = {};
+        var x = 0, array = [];
 
         var accountLoop = () =>
         {
@@ -120,12 +120,11 @@ module.exports.getParticipantsToEvent = (eventID, databaseConnector, callback) =
 
             else
             {
-              obj[x] = {};
-              obj[x] = accountOrErrorMessage[0];
-              obj[x].status = {};
-              obj[x].status = participantsOrErrorMessage[x].status
+              array[x] = {};
+              array[x] = accountOrErrorMessage[0];
+              array[x].status = participantsOrErrorMessage[x].status
 
-              participantsOrErrorMessage[x += 1] == undefined ? callback(obj) : accountLoop();
+              participantsOrErrorMessage[x += 1] == undefined ? callback(array) : accountLoop();
             }
           });
         }

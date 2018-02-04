@@ -17,6 +17,7 @@ const FRIENDSHIP_STATUS_NOT_AUTHORIZED                                          
 const AUTHENTICATION_TOKEN_REQUIRED                                                           = 10015;
 const CANNOT_ADD_YOURSELF_AS_FRIEND                                                           = 10016;
 const PARTICIPATION_STATUS_NOT_AUTHORIZED                                                     = 10017;
+const COULD_NOT_UPDATE_EVENT_DATE                                                             = 10018;
 
 /****************************************************************************************************/
 
@@ -38,5 +39,6 @@ module.exports =
   FRIENDSHIP_STATUS_NOT_AUTHORIZED: FRIENDSHIP_STATUS_NOT_AUTHORIZED,
   AUTHENTICATION_TOKEN_REQUIRED: AUTHENTICATION_TOKEN_REQUIRED,
   CANNOT_ADD_YOURSELF_AS_FRIEND: CANNOT_ADD_YOURSELF_AS_FRIEND,
-  PARTICIPATION_STATUS_NOT_AUTHORIZED: PARTICIPATION_STATUS_NOT_AUTHORIZED
+  PARTICIPATION_STATUS_NOT_AUTHORIZED: PARTICIPATION_STATUS_NOT_AUTHORIZED,
+  COULD_NOT_UPDATE_EVENT_DATE: COULD_NOT_UPDATE_EVENT_DATE
 }

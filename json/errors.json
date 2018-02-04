@@ -15,5 +15,6 @@
   "10014": "this friendship status is not authorized",
   "10015": "an authentication token is required",
   "10016": "you cannot add yourself as a friend",
-  "10017": "this participation status does not exist"
+  "10017": "this participation status does not exist",
+  "10018": "could not update event date using time cycle"
 }

@@ -61,7 +61,23 @@ router.post('/delete-event', (req, res) =>
 
   res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) : 
 
-  eventsDelete.deleteEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
+  eventsDelete.deleteEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), req.app.get('notificationSender'), (boolean, errorStatus, errorCode) =>
+  {
+    boolean ?
+    res.status(200).send({ result: true }) :
+    res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` });
+  });
+});
+
+/****************************************************************************************************/
+
+router.post('/cancel-event', (req, res) =>
+{
+  req.body.event == undefined ?
+
+  res.status(406).send({ result: false, message: `Error [406] - ${errors[10005]} !` }) :
+
+  eventsDelete.cancelEvent(req.body.event, req.token.email, req.app.get('databaseConnector'), req.app.get('notificationSender'), (boolean, errorStatus, errorCode) =>
   {
     boolean ?
     res.status(200).send({ result: true }) :

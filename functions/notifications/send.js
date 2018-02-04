@@ -28,6 +28,16 @@ module.exports.sendEventIsStarting = (sender, event, accountEmail, databaseConne
 
 /****************************************************************************************************/
 
+module.exports.eventIsDeleted = (sender, event, accountEmail, databaseConnector, callback) =>
+{
+  sendNotifications(sender, `Un événement a été supprimé`, `L'événement "${event.name}" a été supprimé par son créateur`, accountEmail, databaseConnector, (boolean, errorStatus, errorMessage) =>
+  {
+    boolean == false ? callback(false, errorStatus, errorMessage) : callback(true);
+  });
+}
+
+/****************************************************************************************************/
+
 module.exports.informUserInvitedToBeFriend = (sender, owner, friendEmail, databaseConnector, callback) =>
 {
   sendNotifications(sender, `Vous avez une demande d'ami`, `${owner.firstname} ${owner.lastname} vous a invité à devenir son ami sur Event Reminder`, friendEmail, databaseConnector, (boolean, errorStatus, errorMessage) =>

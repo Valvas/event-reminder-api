@@ -75,7 +75,7 @@ router.put('/get-participants-to-event', (req, res) =>
 {
   eventsGet.getParticipantsToEvent(req.body.event, req.app.get('databaseConnector'), (participants, errorStatus, errorCode) =>
   {
-    participants == false ?
+    typeof(participants) == 'boolean' && participants == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
     res.status(200).send({ result: true, participants: participants });
   });

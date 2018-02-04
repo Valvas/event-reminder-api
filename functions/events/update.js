@@ -18,7 +18,7 @@ module.exports.updateEventDateUsingCycle = (event, databaseConnector, sender, ca
     currentDate.setFullYear(currentDate.getFullYear() + parseInt(event.cycle_years));
     currentDate.setMonth(currentDate.getMonth() + parseInt(event.cycle_months));
     currentDate.setDate(currentDate.getDate() + parseInt(event.cycle_days));
-    currentDate.sethours(currentDate.getHours() + parseInt(event.cycle_hours));
+    currentDate.setHours(currentDate.getHours() + parseInt(event.cycle_hours));
     currentDate.setMinutes(currentDate.getMinutes() + parseInt(event.cycle_minutes));
 
     databaseManager.updateQuery(
@@ -47,7 +47,7 @@ module.exports.updateEventDateUsingCycle = (event, databaseConnector, sender, ca
 
           else
           {
-            databaseManager.updateQuery(
+            databaseManager.selectQuery(
             {
               'databaseName': params.database.name,
               'tableName': params.database.tables.participations,
