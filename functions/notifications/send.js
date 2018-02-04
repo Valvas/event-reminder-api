@@ -87,8 +87,8 @@ function sendNotifications(sender, title, messageContent, accountEmail, database
       
       console.log(`[NOTIFICATION] - Sending notifications to ${tokensOrFalse.length} devices of "${accountEmail}" with content "${messageContent}"...`);
 
-      sender.sendNoRetry(message, { registrationTokens: tokensOrFalse }, (err, response) =>
-      {
+      sender.send(message, { registrationTokens: tokensOrFalse }, (err, response) =>
+      {if(err)console.log(err);
         err ? callback(false, 500, err.message) : callback(true);
       });
     }
