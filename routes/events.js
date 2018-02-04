@@ -19,7 +19,7 @@ router.get('/get-my-events', (req, res) =>
 {
   eventsGet.getEvents(req.token.email, req.app.get('databaseConnector'), (eventsObjectOrFalse, errorStatus, errorCode) =>
   {
-    eventsObjectOrFalse == false ?
+    typeof(eventsObjectOrFalse) == 'boolean' && eventsObjectOrFalse == false ?
     res.status(errorStatus).send({ result: false, message: `Error [${errorStatus}] - ${errors[errorCode]} !` }) :
     res.status(200).send({ result: true, events: eventsObjectOrFalse });
   });

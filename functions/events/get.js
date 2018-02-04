@@ -26,7 +26,7 @@ module.exports.getEvents = (accountEmail, databaseConnector, callback) =>
 
       else
       {
-        if(rowsOrErrorMessage.length == 0) callback({});
+        if(rowsOrErrorMessage.length == 0) callback([]);
 
         else
         {
