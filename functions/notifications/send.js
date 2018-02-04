@@ -68,7 +68,7 @@ module.exports.invitedToParticipateToEvent = (sender, event, accountEmail, datab
 
 /****************************************************************************************************/
 
-function sendNotifications(sender, title, message, accountEmail, databaseConnector, callback)
+function sendNotifications(sender, title, messageContent, accountEmail, databaseConnector, callback)
 {
   notificationsGet.getNotificationTokensForAccount(accountEmail, databaseConnector, (tokensOrFalse, errorStatus, errorCode) =>
   {
@@ -81,11 +81,11 @@ function sendNotifications(sender, title, message, accountEmail, databaseConnect
         notification: 
         {
           title: title,
-          body: message
+          body: messageContent
         },
       });
       
-      console.log(`[NOTIFICATION] - Sending notifications to ${tokensOrFalse.length} devices of "${accountEmail}" with content "${message}"...`);
+      console.log(`[NOTIFICATION] - Sending notifications to ${tokensOrFalse.length} devices of "${accountEmail}" with content "${messageContent}"...`);
 
       sender.sendNoRetry(message, { registrationTokens: tokensOrFalse }, (err, response) =>
       {
