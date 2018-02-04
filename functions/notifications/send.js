@@ -88,7 +88,7 @@ function sendNotifications(sender, title, messageContent, accountEmail, database
       console.log(`[NOTIFICATION] - Sending notifications to ${tokensOrFalse.length} devices of "${accountEmail}" with content "${messageContent}"...`);
 
       sender.send(message, { registrationTokens: tokensOrFalse }, (err, response) =>
-      {console.log(response);console.log(tokensOrFalse);
+      {console.log(response);
         err ? callback(false, 500, err.message) : callback(true);
       });
     }

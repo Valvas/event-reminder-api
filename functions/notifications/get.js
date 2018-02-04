@@ -26,7 +26,7 @@ module.exports.getNotificationTokensForAccount = (accountEmail, databaseConnecto
 
       var loop = () =>
       {
-        tokens.push(tokensOrErrorMessage[x]);
+        tokens.push(tokensOrErrorMessage[x].token);
 
         tokensOrErrorMessage[x += 1] == undefined ? callback(tokens) : loop();
       }
