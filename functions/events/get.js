@@ -17,7 +17,7 @@ module.exports.getEvents = (accountEmail, databaseConnector, callback) =>
     {
       'databaseName': params.database.name,
       'tableName': params.database.tables.participations,  
-      'args': { '0': 'event_id' },    
+      'args': { '0': '*' },    
       'where': { '0': { 'operator': '=', '0': { 'key': 'account_email', 'value': accountEmail } } }
     
     }, databaseConnector, (boolean, rowsOrErrorMessage) =>
@@ -65,6 +65,7 @@ module.exports.getEvents = (accountEmail, databaseConnector, callback) =>
                     obj[x]['months']      = eventOrErrorMessage[0]['cycle_months'];
                     obj[x]['minutes']     = eventOrErrorMessage[0]['cycle_minutes'];
                     obj[x]['ponctual']    = eventOrErrorMessage[0]['is_ponctual'] == 1 ? true : false;
+                    obj[x]['status']      = rowsOrErrorMessage[x].status;
 
                     obj[x]['account'] = accountOrFalse;
 
