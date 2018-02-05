@@ -2,6 +2,7 @@
 
 var params                    = require(`${__root}/json/params`);
 var constants                 = require(`${__root}/functions/constants`);
+var friendsGet                = require(`${__root}/functions/friends/get`);
 var eventsCheck               = require(`${__root}/functions/events/check`);
 var accountsGet               = require(`${__root}/functions/accounts/get`);
 var participationsCheck       = require(`${__root}/functions/participations/check`);
@@ -79,6 +80,50 @@ module.exports.getParticipationStatusForAllEvents = (accountEmail, databaseConne
 
           statusLoop();
         }     
+      }
+    });
+  });
+}
+
+/****************************************************************************************************/
+
+module.exports.getFriendsToInvite = (emailAddress, databaseConnector, callback) =>
+{
+  accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
+  {
+    accountOrFalse == false ? callback(false, errorStatus, errorCode) :
+
+    friendsGet.getMyFriends(emailAddress, databaseConnector, (friendsArray, errorStatus, errorCode) =>
+    {
+      if(typeof(friendsArray) == 'boolean' && friendsArray == false) callback(false, errorStatus, errorCode);
+
+      else
+      {
+        var x = 0;
+        var array = [];
+        
+        var loop = () =>
+        {
+          databaseManager.selectQuery(
+          {
+            'databaseName': params.database.name,
+            'tableName': params.database.tables.participations,
+            'args': { '0': 'status' },
+            'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventID }, '1': { 'key': 'account_email', 'value': friendsArray[x]['friendData']['email'] } } } }
+          
+          }, databaseConnector, (boolean, participantOrErrorMessage) =>
+          {
+            if(boolean == false) callback(false, 500, constants.DATABASE_QUERY_ERROR);
+
+            else
+            {
+              if()
+              friendsArray[x += 1] == undefined ? callback(array) : loop();
+            }
+          });
+        }
+
+        friendsArray[x] == undefined ? callback([]) : loop();
       }
     });
   });

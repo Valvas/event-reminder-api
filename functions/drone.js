@@ -34,7 +34,7 @@ module.exports.getStartingEventsInAnHour = (databaseConnector, sender) =>
           'databaseName': params.database.name,
           'tableName': params.database.tables.participations,
           'args': { '0': '*' },
-          'where': { '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventsOrErrorMessage[x]['id'] } } }
+          'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventsOrErrorMessage[x]['id'] }, '1': { 'key': 'status', 'value': params.participationStatus.ACCEPTED } } } }
           
         }, databaseConnector, (boolean, participationsOrErrorMessage) =>
         {
@@ -98,7 +98,7 @@ module.exports.getStartingEvents = (databaseConnector, sender) =>
             'databaseName': params.database.name,
             'tableName': params.database.tables.participations,
             'args': { '0': '*' },
-            'where': { '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventsOrErrorMessage[x]['id'] } } }
+            'where': { '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'event_id', 'value': eventsOrErrorMessage[x]['id'] }, '1': { 'key': 'status', 'value': params.participationStatus.ACCEPTED } } } }
             
           }, databaseConnector, (boolean, participationsOrErrorMessage) =>
           {
