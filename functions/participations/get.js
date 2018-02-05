@@ -87,9 +87,15 @@ module.exports.getParticipationStatusForAllEvents = (accountEmail, databaseConne
 
 /****************************************************************************************************/
 
-module.exports.getFriendsToInvite = (emailAddress, databaseConnector, callback) =>
+module.exports.getFriendsToInvite = (eventID, emailAddress, databaseConnector, callback) =>
 {
-  accountsGet.getAccountUsingEmail(accountEmail, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
+  eventID             == undefined ||
+  emailAddress        == undefined ||
+  databaseConnector   == undefined ?
+
+  callback(false, 406, constants.MISSING_DATA_IN_QUERY) :
+  
+  accountsGet.getAccountUsingEmail(emailAddress, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
   {
     accountOrFalse == false ? callback(false, errorStatus, errorCode) :
 
@@ -117,7 +123,11 @@ module.exports.getFriendsToInvite = (emailAddress, databaseConnector, callback) 
 
             else
             {
-              if()
+              if(participantOrErrorMessage.length == 0 || participantOrErrorMessage[0].status == params.participationStatus.REJECTED)
+              {
+                array.push(friendsArray[x]['friendData']);
+              }
+
               friendsArray[x += 1] == undefined ? callback(array) : loop();
             }
           });

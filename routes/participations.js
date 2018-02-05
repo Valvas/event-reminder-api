@@ -15,6 +15,18 @@ var router = express.Router();
 
 /****************************************************************************************************/
 
+router.post('/get-friends-to-invite', (req, res) =>
+{
+  participationsGet.getFriendsToInvite(req.body.event, req.token.email, req.app.get('databaseConnector'), (friendsOrFalse, errorStatus, errorCode) =>
+  {
+    typeof(friendsOrFalse == 'boolean') && friendsOrFalse == false ?
+    res.status(errorStatus).send({ result: false, message: errors[errorCode] }) :
+    res.status(200).send({ result: true, friends: friendsOrFalse });
+  });
+});
+
+/****************************************************************************************************/
+
 router.put('/update-participation-status', (req, res) =>
 {
   eventsSet.setParticipationStatusToEvent(req.body.update, req.app.get('databaseConnector'), (boolean, errorStatus, errorCode) =>
