@@ -133,7 +133,7 @@ module.exports.deleteQuery = (query, SQLConnector, callback) =>
       Object.keys(query.where)[x] != undefined ? loop() :
       
       SQLConnector.query(sql, (err, result) =>
-      {
+      {console.log(sql);
         err ? callback(false, err.message) : callback(true, result.affectedRows);
       });
     });

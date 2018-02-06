@@ -49,8 +49,12 @@ module.exports.deleteFriend = (ownerEmail, friendEmail, databaseConnector, callb
                     { 
                       'key': 'owner_email', 'value': ownerEmail 
                     } 
-                  },
-                  '1': 
+                  }
+                },
+				'1':
+				{
+				  'operator': 'AND',
+				  '0': 
                   { 
                     'operator': '=', 
                     '0': 
@@ -62,7 +66,7 @@ module.exports.deleteFriend = (ownerEmail, friendEmail, databaseConnector, callb
                       'key': 'owner_email', 'value': friendEmail 
                     } 
                   }
-                }
+				}
               } 
             }
           
