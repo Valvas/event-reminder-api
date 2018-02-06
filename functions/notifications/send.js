@@ -1,6 +1,5 @@
 'use strict';
 
-var gcm                       = require('node-gcm');
 var params                    = require(`${__root}/json/params`);
 var constants                 = require(`${__root}/functions/constants`);
 var notificationsGet          = require(`${__root}/functions/notifications/get`);
