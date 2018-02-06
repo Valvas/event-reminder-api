@@ -30,7 +30,41 @@ module.exports.deleteFriend = (ownerEmail, friendEmail, databaseConnector, callb
           {
             'databaseName': params.database.name,
             'tableName': params.database.tables.friends,
-            'where': { '0': { 'operator': 'OR', '0': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'friend_email', 'value': friendEmail }, '1': { 'key': 'owner_email', 'value': ownerEmail } } }, '1': { 'operator': 'AND', '0': { 'operator': '=', '0': { 'key': 'friend_email', 'value': ownerEmail }, '1': { 'key': 'owner_email', 'value': friendEmail } } } } }
+            'where': 
+            { 
+              '0': 
+              { 
+                'operator': 'OR', 
+                '0': 
+                { 
+                  'operator': 'AND', 
+                  '0': 
+                  { 
+                    'operator': '=', 
+                    '0': 
+                    { 
+                      'key': 'friend_email', 'value': friendEmail 
+                    }, 
+                    '1': 
+                    { 
+                      'key': 'owner_email', 'value': ownerEmail 
+                    } 
+                  },
+                  '1': 
+                  { 
+                    'operator': '=', 
+                    '0': 
+                    { 
+                      'key': 'friend_email', 'value': ownerEmail 
+                    }, 
+                    '1': 
+                    { 
+                      'key': 'owner_email', 'value': friendEmail 
+                    } 
+                  }
+                }
+              } 
+            }
           
           }, databaseConnector, (boolean, deletedRowsOrErrorMessage) =>
           {
