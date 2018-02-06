@@ -101,7 +101,13 @@ function sendNotifications(sender, title, messageContent, accountEmail, database
         }
       }; 
 
-      sender.messaging().sendToDevice(tokensOrFalse, message).then((response) =>
+      var options = 
+      {
+        priority: 'high',
+        timeToLive: 60 * 60 * 24
+      };
+
+      sender.messaging().sendToDevice(tokensOrFalse, message, options).then((response) =>
       {
         console.log(`[NOTIFICATION] - Sending notifications to ${tokensOrFalse.length} devices of "${accountEmail}" with content "${messageContent}"...`);
         callback(true);
