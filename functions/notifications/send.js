@@ -92,21 +92,24 @@ function sendNotifications(sender, title, messageContent, accountEmail, database
     }
 
     else
-    {
-      var message = new gcm.Message(
+    {   
+      var message =
       {
         notification: 
         {
           title: title,
           body: messageContent
-        },
-      });
-      
-      console.log(`[NOTIFICATION] - Sending notifications to ${tokensOrFalse.length} devices of "${accountEmail}" with content "${messageContent}"...`);
+        }
+      }; 
 
-      sender.send(message, { registrationTokens: tokensOrFalse }, (err, response) =>
+      sender.messaging().sendToDevice(tokensOrFalse, message).then((response) =>
       {
-        err ? callback(false, 500, err.message) : callback(true);
+        console.log(`[NOTIFICATION] - Sending notifications to ${tokensOrFalse.length} devices of "${accountEmail}" with content "${messageContent}"...`);
+        callback(true);
+      }).catch((error) =>
+      {
+        console.log("Error sending message:", error);
+        callback(true);
       });
     }
   });

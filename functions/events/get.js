@@ -47,31 +47,39 @@ module.exports.getEvents = (accountEmail, databaseConnector, callback) =>
 
               else
               {
-                accountsGet.getAccountUsingEmail(eventOrErrorMessage[0].account_email, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
+                if(eventOrErrorMessage[0] != undefined)
                 {
-                  if(accountOrFalse == false) callback(false, errorStatus, errorCode);
-
-                  else
+                  accountsGet.getAccountUsingEmail(eventOrErrorMessage[0].account_email, databaseConnector, (accountOrFalse, errorStatus, errorCode) =>
                   {
-                    obj[x] = {};
-                    
-                    obj[x]['id']          = eventOrErrorMessage[0]['id'];
-                    obj[x]['name']        = eventOrErrorMessage[0]['name'];
-                    obj[x]['date']        = eventOrErrorMessage[0]['date'];
-                    obj[x]['days']        = eventOrErrorMessage[0]['cycle_days'];
-                    obj[x]['years']       = eventOrErrorMessage[0]['cycle_years'];
-                    obj[x]['hours']       = eventOrErrorMessage[0]['cycle_hours'];
-                    obj[x]['description'] = eventOrErrorMessage[0]['description'];
-                    obj[x]['months']      = eventOrErrorMessage[0]['cycle_months'];
-                    obj[x]['minutes']     = eventOrErrorMessage[0]['cycle_minutes'];
-                    obj[x]['ponctual']    = eventOrErrorMessage[0]['is_ponctual'] == 1 ? true : false;
-                    obj[x]['status']      = rowsOrErrorMessage[x].status;
+                    if(accountOrFalse == false) callback(false, errorStatus, errorCode);
+  
+                    else
+                    {
+                      obj[x] = {};
+                      
+                      obj[x]['id']          = eventOrErrorMessage[0]['id'];
+                      obj[x]['name']        = eventOrErrorMessage[0]['name'];
+                      obj[x]['date']        = eventOrErrorMessage[0]['date'];
+                      obj[x]['days']        = eventOrErrorMessage[0]['cycle_days'];
+                      obj[x]['years']       = eventOrErrorMessage[0]['cycle_years'];
+                      obj[x]['hours']       = eventOrErrorMessage[0]['cycle_hours'];
+                      obj[x]['description'] = eventOrErrorMessage[0]['description'];
+                      obj[x]['months']      = eventOrErrorMessage[0]['cycle_months'];
+                      obj[x]['minutes']     = eventOrErrorMessage[0]['cycle_minutes'];
+                      obj[x]['ponctual']    = eventOrErrorMessage[0]['is_ponctual'] == 1 ? true : false;
+                      obj[x]['status']      = rowsOrErrorMessage[x].status;
+  
+                      obj[x]['account'] = accountOrFalse;
+  
+                      rowsOrErrorMessage[x += 1] == undefined ? callback(obj) : eventLoop();
+                    }
+                  });
+                }
 
-                    obj[x]['account'] = accountOrFalse;
-
-                    rowsOrErrorMessage[x += 1] == undefined ? callback(obj) : eventLoop();
-                  }
-                });
+                else
+                {
+                  rowsOrErrorMessage[x += 1] == undefined ? callback(obj) : eventLoop();
+                }
               }
             });
           }

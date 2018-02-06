@@ -4,9 +4,10 @@ var path                  = require('path');
 var mysql                 = require('mysql');
 var logger                = require('morgan');
 var express               = require('express');
-var gcm                   = require('node-gcm');
 var bodyParser            = require('body-parser');
 var params                = require('./json/params');
+var firebase              = require('firebase-admin');
+var serviceAccount        = require('./json/key.json');
 var token                 = require('./functions/token');
 var drone                 = require('./functions/drone');
 var databaseInit          = require('./functions/database/init');
@@ -18,19 +19,23 @@ var participations        = require('./routes/participations');
 
 var publicAccounts        = require('./routes/public/accounts');
 
+firebase.initializeApp(
+{
+  credential: firebase.credential.cert(serviceAccount),
+  databaseURL: 'https://event-reminder-3acda.firebaseio.com'
+});
+
 var connector = mysql.createConnection(
 {
   host     : params.database.host,
   user     : params.database.user,
   password : params.database.password
 });
- 
-var sender = new gcm.Sender('AAAAmekFs6Y:APA91bECVn03td4aY4N0z406-BtnL5VGDiIjY8zsR1nAK8oHnrcQdwDqu7NkLnM7_J3WtGcK9uTxPLobvI7C5o-19tSVtD-p5zPPTcIHecYgspguATiLbgCHI7LJbMxPEOpiA9GnUfKM');
 
 var app = express();
 
 app.set('tokenSecret', params.secret);
-app.set('notificationSender', sender);
+app.set('notificationSender', firebase);
 app.set('databaseConnector', connector);
 
 app.use(logger('dev'));
@@ -49,8 +54,8 @@ databaseInit.createDatabases(connector, () =>
 {
   var loop = () =>
   {
-    drone.getStartingEventsInAnHour(connector, sender);
-    drone.getStartingEvents(connector, sender);
+    drone.getStartingEventsInAnHour(connector, firebase);
+    drone.getStartingEvents(connector, firebase);
 
     setTimeout(() => { loop(); }, 1000);
   }
